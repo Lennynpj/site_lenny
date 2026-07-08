@@ -12,7 +12,7 @@ const exercises = [
     name: 'Chest Press (pecs)',
     muscles: ['pecs', 'triceps', 'épaules'],
     equipment: 'machine',
-    imagePath: '/exercises/perso/chest-press.jpg',
+    imagePath: '/exercises/perso/chest-press-developpe-pecs.jpeg',
     machineEquivalent: null,
   },
   {
@@ -28,7 +28,7 @@ const exercises = [
     name: 'Butterfly (pecs)',
     muscles: ['pecs'],
     equipment: 'machine',
-    imagePath: '/exercises/perso/butterfly.jpeg',
+    imagePath: '/exercises/perso/butterfly-pec-deck.jpeg',
     machineEquivalent: null,
   },
   {
@@ -78,7 +78,7 @@ const exercises = [
     name: 'Circuit abdos',
     muscles: ['abdos'],
     equipment: 'poulie',
-    imagePath: '/exercises/perso/abdos.jpeg',
+    imagePath: '/exercises/perso/crunch-poulie-abdos.jpeg',
     machineEquivalent: null,
   },
   {
@@ -86,7 +86,7 @@ const exercises = [
     name: 'Tirage vertical (dos)',
     muscles: ['dos', 'biceps'],
     equipment: 'machine',
-    imagePath: '/exercises/perso/tirage-vertical.jpeg',
+    imagePath: '/exercises/perso/tirage-vertical-lat-pulldown.jpeg',
     machineEquivalent: null,
   },
   {
@@ -94,7 +94,7 @@ const exercises = [
     name: 'Tirage horizontal (dos)',
     muscles: ['dos', 'biceps'],
     equipment: 'machine',
-    imagePath: '/exercises/perso/tirage-horizontal.jpeg',
+    imagePath: '/exercises/perso/tirage-horizontal-rowing.jpeg',
     machineEquivalent: null,
   },
   {
@@ -128,7 +128,7 @@ const exercises = [
     name: 'Curl biceps (machine)',
     muscles: ['biceps'],
     equipment: 'machine',
-    imagePath: '/exercises/perso/biceps.jpeg',
+    imagePath: '/exercises/perso/curl-pupitre-biceps.jpeg',
     machineEquivalent: null,
   },
   {
