@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    # Décommente pour consulter la base avec Compass (via tunnel SSH uniquement,
+    # le port reste bindé sur localhost — jamais exposé sur internet) :
+    # ports:
+    #   - "127.0.0.1:27017:27017"
+
+  api:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/site_lenny
+      PORT: "3001"
+    depends_on:
+      - mongo
+
+  web:
+    build: ./client
+    restart: unless-stopped
+    ports:
+      # Change le port public avec WEB_PORT (ex. WEB_PORT=8080 docker compose up -d)
+      - "${WEB_PORT:-80}:80"
+    depends_on:
+      - api
+
+volumes:
+  mongo-data:

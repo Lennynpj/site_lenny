@@ -1,6 +1,70 @@
 # Déployer le site sur ton VPS
 
-Guide pour passer de la démo locale au VPS (Ubuntu/Debian supposé). À faire quand la démo te convient.
+Deux méthodes : **Docker (recommandé — ton cas)** ou installation classique.
+
+---
+
+## Méthode A — Docker (recommandé)
+
+Prérequis : Docker + le plugin compose installés sur le VPS (déjà fait chez toi).
+
+### Premier déploiement
+
+```bash
+git clone https://github.com/Lennynpj/site_lenny.git
+cd site_lenny
+docker compose up -d --build     # démarre MongoDB + API + site (port 80)
+docker compose exec api npm run seed   # remplit la base — première fois seulement
+```
+
+C'est tout : le site est sur `http://ip-du-vps`. Trois conteneurs tournent :
+`web` (nginx, sert le site + proxifie `/api`), `api` (Node/Express), `mongo`
+(données persistées dans le volume Docker `mongo-data`).
+
+Si le port 80 est déjà pris sur ton VPS :
+
+```bash
+WEB_PORT=8080 docker compose up -d --build   # site sur le port 8080
+```
+
+(et pointe ton reverse-proxy existant vers ce port).
+
+### Mettre à jour le site
+
+Après un `git push` depuis ton PC :
+
+```bash
+cd site_lenny
+git pull
+docker compose up -d --build     # rebuild + redémarre, sans toucher aux données
+```
+
+### Consulter la base avec Compass
+
+Dans `docker-compose.yml`, décommente les deux lignes `ports` du service `mongo`
+puis `docker compose up -d`. Le port n'est ouvert que sur le localhost du VPS —
+depuis ton PC, fais un tunnel SSH puis connecte Compass sur `mongodb://localhost:27017` :
+
+```bash
+ssh -L 27017:localhost:27017 utilisateur@ip-du-vps
+```
+
+### Sauvegarde de la base
+
+```bash
+docker compose exec mongo mongodump --db site_lenny --archive > backup-$(date +%F).archive
+```
+
+### HTTPS
+
+Si tu as un nom de domaine : le plus simple est un reverse-proxy sur l'hôte
+(Caddy ou nginx + certbot) qui pointe vers `127.0.0.1:8080` (lance le site avec
+`WEB_PORT=8080` et bind localhost si tu veux). Si tu as déjà un Traefik/nginx
+docker sur le VPS, branche le service `web` dessus.
+
+---
+
+## Méthode B — Installation classique (sans Docker)
 
 ## 1. Installer les prérequis sur le VPS
 
