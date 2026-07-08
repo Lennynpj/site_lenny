@@ -37,9 +37,35 @@ puis `sudo systemctl reload caddy`. Caddy obtient le certificat HTTPS tout seul.
 (Sans domaine, tu peux mettre `http://ip-du-vps:80` comme adresse de site, mais
 un sous-domaine + HTTPS est fortement recommandé.)
 
-**Caddy dans Docker** — suis les commentaires du service `web` dans
-`docker-compose.yml` : supprime le bloc `ports`, attache le service au réseau
-de ton Caddy, et dans le Caddyfile : `reverse_proxy web:80`.
+**Caddy dans Docker (ton cas — conteneur `eventpics-caddy`)** :
+
+```bash
+cd site_lenny
+cp docker-compose.caddy.yml docker-compose.override.yml
+
+# Vérifie le nom du réseau de ton Caddy :
+docker inspect eventpics-caddy --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}'
+# Si ce n'est PAS eventpics-prod_default :
+echo "CADDY_NETWORK=le-nom-affiché" > .env
+
+docker compose up -d --build
+```
+
+Puis ajoute dans `/home/debian/eventpics/deploy/Caddyfile` :
+
+```caddyfile
+muscu.ton-domaine.fr {
+    reverse_proxy site-lenny:80
+}
+```
+
+et recharge Caddy sans coupure :
+
+```bash
+docker exec eventpics-caddy caddy reload --config /etc/caddy/Caddyfile
+```
+
+N'oublie pas l'enregistrement DNS (`muscu` → type A → IP du VPS).
 
 Autres réglages : `WEB_PORT=9000` pour changer le port local,
 `WEB_BIND=0.0.0.0 WEB_PORT=80` pour exposer directement sans Caddy.
