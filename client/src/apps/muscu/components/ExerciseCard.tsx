@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CaretDown, Check, MapPin } from '@phosphor-icons/react'
+import { CaretDown, Check, MapPin, Wrench } from '@phosphor-icons/react'
 import type { Exercise, LastPerf, ProgramItem, SetEntry } from '../../../lib/types'
 
 interface Props {
@@ -96,6 +96,14 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
             </figcaption>
           )}
         </figure>
+      )}
+
+      {/* Réglage cable station : position de la poulie + accessoire */}
+      {exercise.setup && (
+        <div className="mt-2.5 flex items-start gap-2 rounded-lg border border-sky-400/20 bg-sky-400/[0.06] px-3 py-2">
+          <Wrench size={14} className="mt-0.5 shrink-0 text-sky-300" />
+          <p className="text-xs leading-relaxed text-sky-200/90">{exercise.setup}</p>
+        </div>
       )}
 
       {machine?.howToFind && (

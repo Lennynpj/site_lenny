@@ -29,6 +29,7 @@ const exercises = [
     muscles: ['dos', 'biceps'],
     equipment: 'poulie',
     imagePath: '/exercises/tirage-horizontal-poulie-basse.jpg',
+    setup: 'Poulie tout en BAS + poignée double (triangle) · assis face à la machine, pieds calés',
     machineEquivalent: null,
   },
   {
@@ -37,6 +38,7 @@ const exercises = [
     muscles: ['dos', 'biceps'],
     equipment: 'poulie',
     imagePath: '/exercises/tirage-poulie-haute-large.jpg',
+    setup: 'Poulie tout en HAUT + barre large · assis, cuisses calées, tu tires la barre vers le haut de la poitrine',
     machineEquivalent: null,
   },
   {
@@ -45,6 +47,7 @@ const exercises = [
     muscles: ['biceps'],
     equipment: 'poulie',
     imagePath: '/exercises/curl-biceps-poulie.jpg',
+    setup: 'Poulie tout en BAS + barre droite ou EZ · debout face à la machine, coudes collés au buste',
     machineEquivalent: null,
   },
   {
@@ -69,6 +72,7 @@ const exercises = [
     muscles: ['épaules'],
     equipment: 'poulie',
     imagePath: '/exercises/elevations-laterales-machine.jpg',
+    setup: 'Poulie tout en BAS + poignée simple · de profil, un bras à la fois',
     machineEquivalent: null,
   },
   {
@@ -77,6 +81,7 @@ const exercises = [
     muscles: ['pecs'],
     equipment: 'poulie',
     imagePath: '/exercises/poulie-basse-croisee-pecs.jpg',
+    setup: 'Les 2 poulies tout en BAS + poignées simples · au centre de la station, tu ramènes les mains devant toi en montant',
     machineEquivalent: null,
   },
   {
@@ -85,6 +90,7 @@ const exercises = [
     muscles: ['épaules arrière', 'dos'],
     equipment: 'poulie',
     imagePath: '/exercises/oiseau-poulie-haute.jpg',
+    setup: 'Les 2 poulies en HAUT, sans accessoire (câbles croisés en main) · tu ouvres les bras vers l’arrière',
     machineEquivalent: null,
   },
   {
@@ -93,6 +99,7 @@ const exercises = [
     muscles: ['triceps'],
     equipment: 'poulie',
     imagePath: '/exercises/pushdown-corde.jpg',
+    setup: 'Poulie tout en HAUT + corde · face à la machine, coudes collés au buste, tu pousses vers le bas',
     machineEquivalent: null,
   },
   {
@@ -101,6 +108,7 @@ const exercises = [
     muscles: ['abdos'],
     equipment: 'poulie',
     imagePath: '/exercises/perso/crunch-poulie-abdos.jpeg',
+    setup: 'Poulie tout en HAUT + corde · à genoux face à la machine, tu enroules le buste vers le sol',
     machineEquivalent: null,
   },
   {
@@ -125,6 +133,7 @@ const exercises = [
     muscles: ['épaules arrière'],
     equipment: 'poulie',
     imagePath: '/exercises/oiseau-poulie-haute.jpg',
+    setup: 'Les 2 poulies en HAUT, sans accessoire (câbles croisés en main) · tu ouvres les bras vers l’arrière',
     machineEquivalent: null,
   },
   {
@@ -133,6 +142,7 @@ const exercises = [
     muscles: ['trapèzes'],
     equipment: 'poulie',
     imagePath: '/exercises/shrugs-poulie.jpg',
+    setup: 'Poulie tout en BAS + barre droite · debout, bras tendus, tu hausses les épaules',
     machineEquivalent: null,
   },
   {
@@ -149,6 +159,7 @@ const exercises = [
     muscles: ['biceps', 'avant-bras'],
     equipment: 'poulie',
     imagePath: '/exercises/curl-marteau-machine.jpg',
+    setup: 'Poulie tout en BAS + corde · prise neutre (pouces vers le haut), coudes fixes',
     machineEquivalent: null,
   },
   {
@@ -173,6 +184,7 @@ const exercises = [
     muscles: ['ischios', 'fessiers', 'lombaires'],
     equipment: 'poulie',
     imagePath: '/exercises/pull-through-poulie.jpg',
+    setup: 'Poulie tout en BAS + corde · dos à la machine, corde entre les jambes, tu pousses les hanches vers l’avant',
     machineEquivalent: null,
   },
   {
@@ -201,10 +213,11 @@ const exercises = [
   },
   {
     slug: 'barre-au-front',
-    name: 'Extension triceps corde (au-dessus de la tête)',
+    name: 'Extensions verticales à la poulie haute (triceps)',
     muscles: ['triceps'],
     equipment: 'poulie',
     imagePath: '/exercises/extension-triceps-corde.jpg',
+    setup: 'Poulie tout en HAUT + corde · dos à la machine, coudes près de la tête, tu tends les bras vers l’avant',
     machineEquivalent: null,
   },
 ]
@@ -221,6 +234,7 @@ const program = {
         { type: 'single', items: [{ exerciseSlug: 'developpe-couche-barre', sets: 4, repsMin: 6, repsMax: 8, note: 'Lourd — c’est ton exo de force du jour' }] },
         { type: 'single', items: [{ exerciseSlug: 'developpe-militaire-halteres', sets: 4, repsMin: 6, repsMax: 8, note: 'Actuellement 10 kg' }] },
         { type: 'single', items: [{ exerciseSlug: 'pec-fly', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'barre-au-front', sets: 3, repsMin: 10, repsMax: 12 }] },
         { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 3, repsMin: 15, repsMax: 20 }] },
       ],
     },
@@ -246,6 +260,7 @@ const program = {
         { type: 'single', items: [{ exerciseSlug: 'developpe-pecs-plateaux', sets: 3, repsMin: 10, repsMax: 12 }] },
         { type: 'single', items: [{ exerciseSlug: 'developpe-militaire-halteres', sets: 3, repsMin: 10, repsMax: 12, note: 'Plus léger que lundi, focus technique' }] },
         { type: 'single', items: [{ exerciseSlug: 'pec-fly', sets: 3, repsMin: 12, repsMax: 15 }] },
+        { type: 'single', items: [{ exerciseSlug: 'barre-au-front', sets: 3, repsMin: 12, repsMax: 15, note: 'Plus léger que lundi' }] },
         { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 3, repsMin: 15, repsMax: 20 }] },
       ],
     },

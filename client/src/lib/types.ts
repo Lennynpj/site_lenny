@@ -11,6 +11,7 @@ export interface Exercise {
   muscles: string[]
   equipment: 'barre' | 'haltères' | 'poulie' | 'machine' | 'poids du corps' | 'cardio'
   imagePath?: string
+  setup?: string
   machineEquivalent?: MachineEquivalent | null
 }
 

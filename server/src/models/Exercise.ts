@@ -19,6 +19,8 @@ const exerciseSchema = new Schema({
     default: 'machine',
   },
   imagePath: String,
+  // Réglage matériel (surtout cable station : position de la poulie + accessoire)
+  setup: String,
   // Équivalent en machine guidée à Fitness Park (null si l'exo est déjà une machine/poulie)
   machineEquivalent: { type: machineEquivalentSchema, default: null },
 })
