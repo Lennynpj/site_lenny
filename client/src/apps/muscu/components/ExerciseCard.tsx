@@ -62,7 +62,7 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
               src={exercise.imagePath}
               alt={exercise.name}
               loading="lazy"
-              className="h-28 w-full rounded-xl border border-white/10 bg-white object-cover"
+              className="h-36 w-full rounded-xl border border-white/10 bg-white object-contain"
             />
             <figcaption className="mt-1.5 font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
               L'exo
@@ -73,7 +73,7 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
               src={machine.imagePath}
               alt={machine.name}
               loading="lazy"
-              className="h-28 w-full rounded-xl border border-white/10 bg-white object-cover"
+              className="h-36 w-full rounded-xl border border-white/10 bg-white object-contain"
             />
             <figcaption className="mt-1.5 flex items-start gap-1 text-[11px] leading-snug font-medium text-lime-300">
               <MapPin size={12} weight="fill" className="mt-0.5 shrink-0" />
@@ -87,7 +87,7 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
             src={exercise.imagePath}
             alt={exercise.name}
             loading="lazy"
-            className="h-44 w-full rounded-xl border border-white/10 bg-white object-cover"
+            className="h-56 w-full rounded-xl border border-white/10 bg-white object-contain"
           />
           {isOwnPhoto && (
             <figcaption className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-lime-300">

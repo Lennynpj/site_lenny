@@ -33,16 +33,11 @@ const exercises = [
   },
   {
     slug: 'elevations-laterales',
-    name: 'Élévations latérales',
+    name: 'Élévations latérales machine (Lateral Raise)',
     muscles: ['épaules'],
-    equipment: 'haltères',
-    imagePath: '/exercises/elevations-laterales.jpg',
-    machineEquivalent: {
-      name: 'Machine élévations latérales (Lateral Raise)',
-      howToFind:
-        'Machine assise avec coussinets contre les avant-bras/coudes, marquée « Lateral Raise ». Sinon : élévations à la poulie basse, un bras à la fois.',
-      imagePath: '/exercises/elevations-laterales-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/elevations-laterales-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'poulie-basse-croisee-pecs',
@@ -54,16 +49,11 @@ const exercises = [
   },
   {
     slug: 'oiseau-poulie-haute',
-    name: 'Oiseau poulie haute',
+    name: 'Reverse Pec Deck (oiseau)',
     muscles: ['épaules arrière', 'dos'],
-    equipment: 'poulie',
-    imagePath: '/exercises/oiseau-poulie-haute.jpg',
-    machineEquivalent: {
-      name: 'Reverse Pec Deck (pec deck inversé)',
-      howToFind:
-        'La machine Pec Deck utilisée à l’envers : assis face au dossier, poignées devant toi, tu ouvres les bras vers l’arrière.',
-      imagePath: '/exercises/oiseau-poulie-haute-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/oiseau-poulie-haute-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'pushdown-corde',
@@ -99,29 +89,19 @@ const exercises = [
   },
   {
     slug: 'rear-delt',
-    name: 'Rear delt (oiseau)',
+    name: 'Reverse Pec Deck (rear delt)',
     muscles: ['épaules arrière'],
-    equipment: 'haltères',
-    imagePath: '/exercises/rear-delt.jpg',
-    machineEquivalent: {
-      name: 'Reverse Pec Deck (pec deck inversé)',
-      howToFind:
-        'Machine Pec Deck à l’envers : assis face au dossier, tu ouvres les bras vers l’arrière. Réglage des poignées en position « rear delt ».',
-      imagePath: '/exercises/rear-delt-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/rear-delt-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'shrugs-halteres',
-    name: 'Shrugs haltères',
+    name: 'Shrugs machine',
     muscles: ['trapèzes'],
-    equipment: 'haltères',
-    imagePath: '/exercises/shrugs-halteres.jpg',
-    machineEquivalent: {
-      name: 'Machine à shrugs (Leverage Shrug) ou Smith machine',
-      howToFind:
-        'Machine à plateaux avec poignées basses de chaque côté (« Shrug ») : debout, tu hausses les épaules. Sinon : barre guidée (Smith machine).',
-      imagePath: '/exercises/shrugs-halteres-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/shrugs-halteres-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'curl-incline',
@@ -133,16 +113,11 @@ const exercises = [
   },
   {
     slug: 'curl-marteau',
-    name: 'Curl marteau',
+    name: 'Curl marteau corde (poulie basse)',
     muscles: ['biceps', 'avant-bras'],
-    equipment: 'haltères',
-    imagePath: '/exercises/curl-marteau.jpg',
-    machineEquivalent: {
-      name: 'Curl corde à la poulie basse',
-      howToFind:
-        'Poulie réglée en bas avec l’accessoire corde : prise neutre (pouces vers le haut), tu remontes la corde en gardant les coudes fixes.',
-      imagePath: '/exercises/curl-marteau-machine.jpg',
-    },
+    equipment: 'poulie',
+    imagePath: '/exercises/curl-marteau-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'presse-a-cuisses',
@@ -154,29 +129,19 @@ const exercises = [
   },
   {
     slug: 'fentes-bulgares',
-    name: 'Fentes bulgares haltères',
+    name: 'Fentes bulgares Smith machine',
     muscles: ['quadriceps', 'fessiers'],
-    equipment: 'haltères',
-    imagePath: '/exercises/fentes-bulgares.jpg',
-    machineEquivalent: {
-      name: 'Fente bulgare à la Smith machine',
-      howToFind:
-        'Barre guidée (Smith machine) + banc derrière toi : pied arrière sur le banc, tu descends sur la jambe avant. Sinon : presse unilatérale (une jambe).',
-      imagePath: '/exercises/fentes-bulgares-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/fentes-bulgares-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'rdl',
-    name: 'RDL (soulevé de terre roumain)',
+    name: 'RDL Smith machine',
     muscles: ['ischios', 'fessiers', 'lombaires'],
-    equipment: 'barre',
-    imagePath: '/exercises/rdl.jpg',
-    machineEquivalent: {
-      name: 'RDL à la Smith machine',
-      howToFind:
-        'Barre guidée (Smith machine) : jambes presque tendues, tu descends la barre le long des cuisses en poussant les hanches en arrière. Complément guidé : leg curl allongé.',
-      imagePath: '/exercises/rdl-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/rdl-machine.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'leg-extension',
@@ -204,16 +169,11 @@ const exercises = [
   },
   {
     slug: 'barre-au-front',
-    name: 'Barre au front',
+    name: 'Extension triceps machine',
     muscles: ['triceps'],
-    equipment: 'barre',
-    imagePath: '/exercises/barre-au-front.jpg',
-    machineEquivalent: {
-      name: 'Machine extension triceps',
-      howToFind:
-        'Machine assise marquée « Triceps Extension » : coudes posés sur le support, tu tends les bras. Sinon : extension corde au-dessus de la tête à la poulie.',
-      imagePath: '/exercises/barre-au-front-machine.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/barre-au-front-machine.jpg',
+    machineEquivalent: null,
   },
 ]
 
