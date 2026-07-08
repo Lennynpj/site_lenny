@@ -13,21 +13,36 @@ Prérequis : Docker + le plugin compose installés sur le VPS (déjà fait chez 
 ```bash
 git clone https://github.com/Lennynpj/site_lenny.git
 cd site_lenny
-docker compose up -d --build     # démarre MongoDB + API + site (port 80)
+docker compose up -d --build           # démarre MongoDB + API + site
 docker compose exec api npm run seed   # remplit la base — première fois seulement
 ```
 
-C'est tout : le site est sur `http://ip-du-vps`. Trois conteneurs tournent :
-`web` (nginx, sert le site + proxifie `/api`), `api` (Node/Express), `mongo`
-(données persistées dans le volume Docker `mongo-data`).
+Trois conteneurs tournent : `web` (nginx, sert le site + proxifie `/api`),
+`api` (Node/Express), `mongo` (données persistées dans le volume `mongo-data`).
 
-Si le port 80 est déjà pris sur ton VPS :
+Le site écoute sur `127.0.0.1:8080` (localhost du VPS uniquement) : c'est **Caddy**
+qui l'expose en HTTPS.
 
-```bash
-WEB_PORT=8080 docker compose up -d --build   # site sur le port 8080
+### Brancher Caddy
+
+**Caddy installé sur le VPS (hors Docker)** — ajoute au `/etc/caddy/Caddyfile` :
+
+```caddyfile
+muscu.ton-domaine.fr {
+    reverse_proxy 127.0.0.1:8080
+}
 ```
 
-(et pointe ton reverse-proxy existant vers ce port).
+puis `sudo systemctl reload caddy`. Caddy obtient le certificat HTTPS tout seul.
+(Sans domaine, tu peux mettre `http://ip-du-vps:80` comme adresse de site, mais
+un sous-domaine + HTTPS est fortement recommandé.)
+
+**Caddy dans Docker** — suis les commentaires du service `web` dans
+`docker-compose.yml` : supprime le bloc `ports`, attache le service au réseau
+de ton Caddy, et dans le Caddyfile : `reverse_proxy web:80`.
+
+Autres réglages : `WEB_PORT=9000` pour changer le port local,
+`WEB_BIND=0.0.0.0 WEB_PORT=80` pour exposer directement sans Caddy.
 
 ### Mettre à jour le site
 
@@ -54,13 +69,6 @@ ssh -L 27017:localhost:27017 utilisateur@ip-du-vps
 ```bash
 docker compose exec mongo mongodump --db site_lenny --archive > backup-$(date +%F).archive
 ```
-
-### HTTPS
-
-Si tu as un nom de domaine : le plus simple est un reverse-proxy sur l'hôte
-(Caddy ou nginx + certbot) qui pointe vers `127.0.0.1:8080` (lance le site avec
-`WEB_PORT=8080` et bind localhost si tu veux). Si tu as déjà un Traefik/nginx
-docker sur le VPS, branche le service `web` dessus.
 
 ---
 
