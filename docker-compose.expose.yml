@@ -1,0 +1,10 @@
+# Expose le site sur un port de l'hôte — cas SANS Caddy, ou Caddy installé hors Docker.
+# Usage :
+#   docker compose -f docker-compose.yml -f docker-compose.expose.yml up -d --build
+# Réglages :
+#   WEB_PORT=8080    port de l'hôte (défaut 80)
+#   WEB_BIND=127.0.0.1   n'écoute que le localhost du VPS (défaut 0.0.0.0)
+services:
+  web:
+    ports:
+      - "${WEB_BIND:-0.0.0.0}:${WEB_PORT:-80}:80"

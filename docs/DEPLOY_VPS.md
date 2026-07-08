@@ -8,50 +8,27 @@ Deux méthodes : **Docker (recommandé — ton cas)** ou installation classique.
 
 Prérequis : Docker + le plugin compose installés sur le VPS (déjà fait chez toi).
 
-### Premier déploiement
+Par défaut le conteneur `web` **ne bind aucun port de l'hôte** : le site est
+joint uniquement par le réseau Docker (aucun risque de conflit de port). Choisis
+ensuite un des deux overrides selon ta situation.
+
+### Cas A — Caddy dans Docker (cas de Lenny : conteneur `eventpics-caddy`)
 
 ```bash
 git clone https://github.com/Lennynpj/site_lenny.git
 cd site_lenny
-docker compose up -d --build           # démarre MongoDB + API + site
+cp docker-compose.caddy.yml docker-compose.override.yml
+
+# Vérifie le nom du réseau de ton Caddy (défaut supposé : eventpics-net) :
+docker inspect eventpics-caddy --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}'
+# Si ce n'est PAS eventpics-net :  echo "CADDY_NETWORK=le-nom-affiché" > .env
+
+docker compose up -d --build
 docker compose exec api npm run seed   # remplit la base — première fois seulement
 ```
 
-Trois conteneurs tournent : `web` (nginx, sert le site + proxifie `/api`),
-`api` (Node/Express), `mongo` (données persistées dans le volume `mongo-data`).
-
-Le site écoute sur `127.0.0.1:8080` (localhost du VPS uniquement) : c'est **Caddy**
-qui l'expose en HTTPS.
-
-### Brancher Caddy
-
-**Caddy installé sur le VPS (hors Docker)** — ajoute au `/etc/caddy/Caddyfile` :
-
-```caddyfile
-muscu.ton-domaine.fr {
-    reverse_proxy 127.0.0.1:8080
-}
-```
-
-puis `sudo systemctl reload caddy`. Caddy obtient le certificat HTTPS tout seul.
-(Sans domaine, tu peux mettre `http://ip-du-vps:80` comme adresse de site, mais
-un sous-domaine + HTTPS est fortement recommandé.)
-
-**Caddy dans Docker (ton cas — conteneur `eventpics-caddy`)** :
-
-```bash
-cd site_lenny
-cp docker-compose.caddy.yml docker-compose.override.yml
-
-# Vérifie le nom du réseau de ton Caddy :
-docker inspect eventpics-caddy --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}'
-# Si ce n'est PAS eventpics-prod_default :
-echo "CADDY_NETWORK=le-nom-affiché" > .env
-
-docker compose up -d --build
-```
-
-Puis ajoute dans `/home/debian/eventpics/deploy/Caddyfile` :
+Le conteneur `web` rejoint le réseau de Caddy sous le nom **`site-lenny`**.
+Ajoute dans `/home/debian/eventpics/deploy/Caddyfile` :
 
 ```caddyfile
 muscu.ton-domaine.fr {
@@ -59,16 +36,29 @@ muscu.ton-domaine.fr {
 }
 ```
 
-et recharge Caddy sans coupure :
+recharge Caddy sans coupure (eventpics n'est pas interrompu) :
 
 ```bash
 docker exec eventpics-caddy caddy reload --config /etc/caddy/Caddyfile
 ```
 
-N'oublie pas l'enregistrement DNS (`muscu` → type A → IP du VPS).
+et crée l'enregistrement DNS (`muscu` → type A → IP du VPS).
 
-Autres réglages : `WEB_PORT=9000` pour changer le port local,
-`WEB_BIND=0.0.0.0 WEB_PORT=80` pour exposer directement sans Caddy.
+### Cas B — sans Caddy, ou Caddy hors Docker
+
+Là on expose un port de l'hôte via l'override `expose` :
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.expose.yml up -d --build
+docker compose exec api npm run seed
+```
+
+Réglages : `WEB_PORT=8080` (port de l'hôte, défaut 80),
+`WEB_BIND=127.0.0.1` (localhost seul, pour un Caddy/nginx hors Docker qui
+proxifie vers `127.0.0.1:8080`).
+
+Dans les deux cas, trois conteneurs tournent : `web` (nginx, sert le site +
+proxifie `/api`), `api` (Node/Express), `mongo` (données dans le volume `mongo-data`).
 
 ### Mettre à jour le site
 

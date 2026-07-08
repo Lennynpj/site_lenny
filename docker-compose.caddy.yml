@@ -1,14 +1,15 @@
-# Override pour brancher le site sur un Caddy qui tourne en Docker.
-# Sur le VPS : cp docker-compose.caddy.yml docker-compose.override.yml
-# (il sera alors chargé automatiquement par `docker compose up -d`).
+# Branche le site sur un Caddy qui tourne déjà en Docker (cas de Lenny : eventpics).
+# Sur le VPS :
+#   cp docker-compose.caddy.yml docker-compose.override.yml
+#   docker compose up -d --build        (l'override est chargé automatiquement)
 #
-# Le service web devient joignable par Caddy sous le nom « site-lenny » :
-#   Caddyfile →  muscu.ton-domaine.fr { reverse_proxy site-lenny:80 }
+# Caddy joint alors le site sous le nom « site-lenny » — dans le Caddyfile :
+#   muscu.ton-domaine.fr { reverse_proxy site-lenny:80 }
 #
-# Le réseau de ton Caddy se trouve avec :
-#   docker inspect eventpics-caddy --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}'
-# S'il est différent du défaut ci-dessous, mets dans un fichier .env :
-#   CADDY_NETWORK=le-nom-du-reseau
+# Le réseau par défaut est celui de la stack eventpics. Si ton Caddy est sur un
+# autre réseau, mets dans un fichier .env :  CADDY_NETWORK=le-nom-du-reseau
+# (trouve-le avec :
+#   docker inspect eventpics-caddy --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}}{{"\n"}}{{end}}')
 services:
   web:
     networks:
@@ -20,4 +21,4 @@ services:
 networks:
   caddy:
     external: true
-    name: ${CADDY_NETWORK:-eventpics-prod_default}
+    name: ${CADDY_NETWORK:-eventpics-net}

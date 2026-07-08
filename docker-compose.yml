@@ -21,24 +21,13 @@ services:
   web:
     build: ./client
     restart: unless-stopped
-    ports:
-      # Bindé sur localhost : c'est Caddy (sur le VPS) qui expose le site en HTTPS.
-      # Caddyfile : reverse_proxy 127.0.0.1:8080
-      # Pour exposer directement sans Caddy : WEB_BIND=0.0.0.0 WEB_PORT=80
-      - "${WEB_BIND:-127.0.0.1}:${WEB_PORT:-8080}:80"
+    # Aucun port de l'hôte par défaut : le site est joint par le réseau Docker.
+    # - Caddy en Docker (recommandé)  → override docker-compose.caddy.yml
+    # - Sans Caddy / Caddy hors Docker → override docker-compose.expose.yml
+    expose:
+      - "80"
     depends_on:
       - api
-    # Si ton Caddy tourne lui-même dans Docker : supprime le bloc "ports" ci-dessus,
-    # décommente ce bloc et mets le nom du réseau de ton Caddy, puis dans le
-    # Caddyfile : reverse_proxy web:80
-    # networks:
-    #   - default
-    #   - caddy
-    #
-# networks:
-#   caddy:
-#     external: true
-#     name: caddy
 
 volumes:
   mongo-data:
