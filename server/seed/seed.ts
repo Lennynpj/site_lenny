@@ -9,42 +9,27 @@ import { Program } from '../src/models/Program.js'
 const exercises = [
   {
     slug: 'developpe-couche-barre',
-    name: 'Développé couché barre',
+    name: 'Chest Press (pecs)',
     muscles: ['pecs', 'triceps', 'épaules'],
-    equipment: 'barre',
-    imagePath: '/exercises/developpe-couche-barre.jpg',
-    machineEquivalent: {
-      name: 'Chest Press Technogym (charge à plateaux)',
-      howToFind:
-        'Machine assise jaune/noire avec deux bras à plateaux, marquée « Chest Press ». Pousse les poignées devant toi, dos plaqué au dossier. (Photo : ta salle)',
-      imagePath: '/exercises/perso/chest-press.jpg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/perso/chest-press.jpg',
+    machineEquivalent: null,
   },
   {
     slug: 'developpe-militaire-halteres',
-    name: 'Développé militaire haltères assis',
+    name: 'Shoulder Press (épaules)',
     muscles: ['épaules', 'triceps'],
-    equipment: 'haltères',
-    imagePath: '/exercises/developpe-militaire-halteres.jpg',
-    machineEquivalent: {
-      name: 'Shoulder Press Technogym (charge à plateaux)',
-      howToFind:
-        'Machine assise avec bras à plateaux au niveau des oreilles, marquée « Shoulder Press ». Pousse vers le haut, sans verrouiller les coudes. (Photo : ta salle)',
-      imagePath: '/exercises/perso/shoulder-press.jpeg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/perso/shoulder-press.jpeg',
+    machineEquivalent: null,
   },
   {
     slug: 'pec-fly',
-    name: 'Pec fly (Butterfly)',
+    name: 'Butterfly (pecs)',
     muscles: ['pecs'],
     equipment: 'machine',
-    imagePath: '/exercises/pec-fly.jpg',
-    machineEquivalent: {
-      name: 'Butterfly Technogym',
-      howToFind:
-        'Machine assise à charge guidée marquée « Butterfly » : bras écartés sur les poignées, tu les ramènes devant toi. (Photo : ta salle)',
-      imagePath: '/exercises/perso/butterfly.jpeg',
-    },
+    imagePath: '/exercises/perso/butterfly.jpeg',
+    machineEquivalent: null,
   },
   {
     slug: 'elevations-laterales',
@@ -92,40 +77,25 @@ const exercises = [
     slug: 'circuit-abdos',
     name: 'Circuit abdos',
     muscles: ['abdos'],
-    equipment: 'poids du corps',
+    equipment: 'poulie',
     imagePath: '/exercises/perso/abdos.jpeg',
-    machineEquivalent: {
-      name: 'Machine à crunch (Ab Crunch)',
-      howToFind:
-        'Machine assise marquée « Abdominal » : tu tires les poignées vers le bas en enroulant le buste. Alternative guidée au circuit au sol.',
-      imagePath: '/exercises/circuit-abdos-machine.jpg',
-    },
+    machineEquivalent: null,
   },
   {
     slug: 'tirage-poulie-haute-large',
-    name: 'Tirage poulie haute prise large',
+    name: 'Tirage vertical (dos)',
     muscles: ['dos', 'biceps'],
-    equipment: 'poulie',
-    imagePath: '/exercises/tirage-poulie-haute-large.jpg',
-    machineEquivalent: {
-      name: 'Tirage vertical à plateaux (Pulldown Technogym)',
-      howToFind:
-        'Machine jaune/noire à plateaux marquée « Pulldown » : assis, cuisses calées, tu tires les poignées vers le bas. (Photo : ta salle)',
-      imagePath: '/exercises/perso/tirage-vertical.jpeg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/perso/tirage-vertical.jpeg',
+    machineEquivalent: null,
   },
   {
     slug: 'tirage-horizontal-poulie-basse',
-    name: 'Tirage horizontal poulie basse prise large',
+    name: 'Tirage horizontal (dos)',
     muscles: ['dos', 'biceps'],
-    equipment: 'poulie',
-    imagePath: '/exercises/tirage-horizontal-poulie-basse.jpg',
-    machineEquivalent: {
-      name: 'Low Row Technogym (tirage horizontal à plateaux)',
-      howToFind:
-        'Machine jaune/noire à plateaux marquée « Low Row » : assis avec appui poitrine, tu tires les poignées vers toi. (Photo : ta salle)',
-      imagePath: '/exercises/perso/tirage-horizontal.jpeg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/perso/tirage-horizontal.jpeg',
+    machineEquivalent: null,
   },
   {
     slug: 'rear-delt',
@@ -155,16 +125,11 @@ const exercises = [
   },
   {
     slug: 'curl-incline',
-    name: 'Curl incliné haltères',
+    name: 'Curl biceps (machine)',
     muscles: ['biceps'],
-    equipment: 'haltères',
-    imagePath: '/exercises/curl-incline.jpg',
-    machineEquivalent: {
-      name: 'Biceps Curl Technogym (pupitre à plateaux)',
-      howToFind:
-        'Machine jaune/noire avec pupitre incliné pour poser les bras, marquée « Biceps Curl » : tu enroules les poignées vers toi. (Photo : ta salle)',
-      imagePath: '/exercises/perso/biceps.jpeg',
-    },
+    equipment: 'machine',
+    imagePath: '/exercises/perso/biceps.jpeg',
+    machineEquivalent: null,
   },
   {
     slug: 'curl-marteau',
@@ -185,12 +150,7 @@ const exercises = [
     muscles: ['quadriceps', 'fessiers', 'ischios'],
     equipment: 'machine',
     imagePath: '/exercises/presse-a-cuisses.jpg',
-    machineEquivalent: {
-      name: 'Squat machine à plateaux (alternative)',
-      howToFind:
-        'Machine jaune/noire à plateaux où tu pousses debout avec les jambes — alternative à la presse si elle est prise. (Photo : ta salle)',
-      imagePath: '/exercises/perso/machine-pousser.jpeg',
-    },
+    machineEquivalent: null,
   },
   {
     slug: 'fentes-bulgares',

@@ -19,6 +19,7 @@ function targetLabel(item: ProgramItem) {
 export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChange }: Props) {
   const [showFind, setShowFind] = useState(false)
   const machine = exercise.machineEquivalent
+  const isOwnPhoto = exercise.imagePath?.includes('/perso/') ?? false
   const allDone = sets.length > 0 && sets.every((s) => s.done)
 
   return (
@@ -53,20 +54,20 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
         </p>
       )}
 
-      {/* Photos : l'exo + son équivalent machine guidée à Fitness Park */}
-      <div className="mt-3.5 grid grid-cols-2 gap-2.5">
-        <figure className="min-w-0">
-          <img
-            src={exercise.imagePath}
-            alt={exercise.name}
-            loading="lazy"
-            className="h-28 w-full rounded-xl border border-white/10 bg-white object-cover"
-          />
-          <figcaption className="mt-1.5 font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
-            L'exo
-          </figcaption>
-        </figure>
-        {machine ? (
+      {/* Photos : soit l'exo + son équivalent machine, soit une seule photo si l'exo EST déjà une machine */}
+      {machine ? (
+        <div className="mt-3.5 grid grid-cols-2 gap-2.5">
+          <figure className="min-w-0">
+            <img
+              src={exercise.imagePath}
+              alt={exercise.name}
+              loading="lazy"
+              className="h-28 w-full rounded-xl border border-white/10 bg-white object-cover"
+            />
+            <figcaption className="mt-1.5 font-mono text-[10px] tracking-wider text-zinc-500 uppercase">
+              L'exo
+            </figcaption>
+          </figure>
           <figure className="min-w-0">
             <img
               src={machine.imagePath}
@@ -79,17 +80,23 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
               {machine.name}
             </figcaption>
           </figure>
-        ) : (
-          <div className="flex h-28 flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-zinc-700/70 p-2 text-center">
-            <Check size={16} className="text-zinc-600" />
-            <span className="text-xs leading-tight text-zinc-500">
-              Déjà guidé
-              <br />
-              (machine / poulie)
-            </span>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <figure className="mt-3.5">
+          <img
+            src={exercise.imagePath}
+            alt={exercise.name}
+            loading="lazy"
+            className="h-44 w-full rounded-xl border border-white/10 bg-white object-cover"
+          />
+          {isOwnPhoto && (
+            <figcaption className="mt-1.5 flex items-center gap-1 text-[11px] font-medium text-lime-300">
+              <MapPin size={12} weight="fill" className="shrink-0" />
+              Ta machine
+            </figcaption>
+          )}
+        </figure>
+      )}
 
       {machine?.howToFind && (
         <div className="mt-2.5">
