@@ -228,22 +228,12 @@ const program = {
       blocks: [
         { type: 'single', items: [{ exerciseSlug: 'developpe-couche-barre', sets: 4, repsMin: 6, repsMax: 8 }] },
         { type: 'single', items: [{ exerciseSlug: 'developpe-militaire-halteres', sets: 4, repsMin: 6, repsMax: 8 }] },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'pec-fly', sets: 3, repsMin: 10, repsMax: 12 },
-            { exerciseSlug: 'elevations-laterales', sets: 3, repsMin: 10, repsMax: 12 },
-          ],
-        },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'poulie-basse-croisee-pecs', sets: 3, repsMin: 10, repsMax: 12 },
-            { exerciseSlug: 'oiseau-poulie-haute', sets: 3, repsMin: 10, repsMax: 12 },
-          ],
-        },
+        { type: 'single', items: [{ exerciseSlug: 'pec-fly', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'elevations-laterales', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'poulie-basse-croisee-pecs', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'oiseau-poulie-haute', sets: 3, repsMin: 10, repsMax: 12 }] },
         { type: 'single', items: [{ exerciseSlug: 'pushdown-corde', sets: 3, repsMin: 10, repsMax: 12 }] },
-        { type: 'circuit', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
+        { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
       ],
     },
     {
@@ -255,14 +245,9 @@ const program = {
         { type: 'single', items: [{ exerciseSlug: 'tirage-horizontal-poulie-basse', sets: 4, repsMin: 8, repsMax: 8 }] },
         { type: 'single', items: [{ exerciseSlug: 'rear-delt', sets: 3, repsMin: 10, repsMax: 15 }] },
         { type: 'single', items: [{ exerciseSlug: 'shrugs-halteres', sets: 3, repsMin: 12, repsMax: 12 }] },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'curl-incline', sets: 3, repsMin: 10, repsMax: 12 },
-            { exerciseSlug: 'curl-marteau', sets: 3, repsMin: 10, repsMax: 12 },
-          ],
-        },
-        { type: 'circuit', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
+        { type: 'single', items: [{ exerciseSlug: 'curl-incline', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'curl-marteau', sets: 3, repsMin: 10, repsMax: 12 }] },
+        { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
       ],
     },
     { weekday: 3, title: 'Run', type: 'run', blocks: [] },
@@ -274,15 +259,10 @@ const program = {
         { type: 'single', items: [{ exerciseSlug: 'presse-a-cuisses', sets: 4, repsMin: 10, repsMax: 10, note: 'Pieds placés hauts sur le plateau' }] },
         { type: 'single', items: [{ exerciseSlug: 'fentes-bulgares', sets: 3, repsMin: 8, repsMax: 10 }] },
         { type: 'single', items: [{ exerciseSlug: 'rdl', sets: 3, repsMin: 8, repsMax: 10 }] },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'leg-extension', sets: 3, repsMin: 10, repsMax: 12, note: 'Unilatéral' },
-            { exerciseSlug: 'leg-curl', sets: 3, repsMin: 10, repsMax: 12, note: 'Unilatéral' },
-          ],
-        },
+        { type: 'single', items: [{ exerciseSlug: 'leg-extension', sets: 3, repsMin: 10, repsMax: 12, note: 'Unilatéral' }] },
+        { type: 'single', items: [{ exerciseSlug: 'leg-curl', sets: 3, repsMin: 10, repsMax: 12, note: 'Unilatéral' }] },
         { type: 'single', items: [{ exerciseSlug: 'mollets', sets: 3, repsMin: 20, repsMax: 20 }] },
-        { type: 'circuit', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
+        { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
       ],
     },
     { weekday: 5, title: 'Repos', type: 'repos', blocks: [] },
@@ -292,29 +272,14 @@ const program = {
       type: 'muscu',
       blocks: [
         { type: 'single', items: [{ exerciseSlug: 'developpe-militaire-halteres', sets: 4, repsMin: 6, repsMax: 8, note: 'Actuellement 10 kg' }] },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'elevations-laterales', sets: 3, repsMin: 10, repsMax: 15, note: '1 série lourde 10-12 + 1 série légère 12-15 · 10 kg → 6 kg' },
-            { exerciseSlug: 'rear-delt', sets: 3, repsMin: 10, repsMax: 15, note: '10 kg → 6 kg' },
-          ],
-        },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'curl-incline', sets: 3, repsMin: 10, repsMax: 12, note: '6 kg — facile, tu peux monter' },
-            { exerciseSlug: 'barre-au-front', sets: 3, repsMin: 10, repsMax: 12, note: '6 kg — facile, tu peux monter' },
-          ],
-        },
-        {
-          type: 'superset',
-          items: [
-            { exerciseSlug: 'curl-marteau', sets: 3, repsMin: 10, repsMax: 12, note: '10 kg — dans le dur (10/8/10)' },
-            { exerciseSlug: 'pushdown-corde', sets: 3, repsMin: 10, repsMax: 12, note: '10 kg — dans le dur' },
-          ],
-        },
+        { type: 'single', items: [{ exerciseSlug: 'elevations-laterales', sets: 3, repsMin: 10, repsMax: 15, note: '1 série lourde 10-12 + 1 série légère 12-15 · 10 kg → 6 kg' }] },
+        { type: 'single', items: [{ exerciseSlug: 'rear-delt', sets: 3, repsMin: 10, repsMax: 15, note: '10 kg → 6 kg' }] },
+        { type: 'single', items: [{ exerciseSlug: 'curl-incline', sets: 3, repsMin: 10, repsMax: 12, note: '6 kg — facile, tu peux monter' }] },
+        { type: 'single', items: [{ exerciseSlug: 'barre-au-front', sets: 3, repsMin: 10, repsMax: 12, note: '6 kg — facile, tu peux monter' }] },
+        { type: 'single', items: [{ exerciseSlug: 'curl-marteau', sets: 3, repsMin: 10, repsMax: 12, note: '10 kg — dans le dur (10/8/10)' }] },
+        { type: 'single', items: [{ exerciseSlug: 'pushdown-corde', sets: 3, repsMin: 10, repsMax: 12, note: '10 kg — dans le dur' }] },
         { type: 'single', items: [{ exerciseSlug: 'shrugs-halteres', sets: 3, repsMin: 12, repsMax: 15, note: '10 kg' }] },
-        { type: 'circuit', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
+        { type: 'single', items: [{ exerciseSlug: 'circuit-abdos', sets: 1 }] },
       ],
     },
     { weekday: 0, title: 'Repos', type: 'repos', blocks: [] },

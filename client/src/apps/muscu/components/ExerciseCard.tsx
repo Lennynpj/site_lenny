@@ -121,47 +121,67 @@ export default function ExerciseCard({ exercise, item, sets, lastPerf, onSetChan
         </div>
       )}
 
-      {/* Saisie des séries */}
+      {/* Saisie des séries — une ligne par série, se remplit en lime une fois validée */}
       <div className="mt-4 space-y-2">
-        <div className="grid grid-cols-[2rem_minmax(0,1fr)_minmax(0,1fr)_2.75rem] items-center gap-2 px-0.5 font-mono text-[10px] tracking-wider text-zinc-600 uppercase">
-          <span />
-          <span>kg</span>
-          <span>reps</span>
-          <span className="text-center">ok</span>
-        </div>
         {sets.map((set, i) => (
-          <div key={i} className="grid grid-cols-[2rem_minmax(0,1fr)_minmax(0,1fr)_2.75rem] items-center gap-2">
-            <span className="font-mono text-xs text-zinc-600">S{i + 1}</span>
-            <input
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step={0.5}
-              value={set.weight || ''}
-              placeholder="—"
-              onChange={(e) => onSetChange(i, { weight: Number(e.target.value) })}
-              className="h-11 w-full min-w-0 rounded-lg border border-zinc-700/70 bg-zinc-800/70 px-2 text-center font-mono text-[15px] text-white transition outline-none placeholder:text-zinc-600 focus:border-lime-300/70"
-            />
-            <input
-              type="number"
-              inputMode="numeric"
-              min={0}
-              value={set.reps || ''}
-              placeholder="—"
-              onChange={(e) => onSetChange(i, { reps: Number(e.target.value) })}
-              className="h-11 w-full min-w-0 rounded-lg border border-zinc-700/70 bg-zinc-800/70 px-2 text-center font-mono text-[15px] text-white transition outline-none placeholder:text-zinc-600 focus:border-lime-300/70"
-            />
+          <div
+            key={i}
+            className={`flex items-center gap-2 rounded-xl border p-2 transition-colors duration-200 ${
+              set.done ? 'border-lime-300/40 bg-lime-300/[0.07]' : 'border-zinc-800 bg-zinc-800/25'
+            }`}
+          >
+            <span
+              className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg font-mono text-sm font-semibold transition-colors ${
+                set.done ? 'bg-lime-300/20 text-lime-300' : 'bg-zinc-800 text-zinc-500'
+              }`}
+            >
+              {i + 1}
+            </span>
+
+            <label className="relative min-w-0 flex-1">
+              <input
+                type="number"
+                inputMode="decimal"
+                min={0}
+                step={0.5}
+                value={set.weight || ''}
+                placeholder="0"
+                onChange={(e) => onSetChange(i, { weight: Number(e.target.value) })}
+                className="h-12 w-full min-w-0 rounded-lg border border-transparent bg-zinc-900/70 pr-7 pl-3 font-mono text-lg text-white tabular-nums outline-none transition placeholder:text-zinc-600 focus:border-lime-300/60"
+              />
+              <span className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 font-mono text-[11px] text-zinc-500">
+                kg
+              </span>
+            </label>
+
+            <span className="font-mono text-sm text-zinc-600">×</span>
+
+            <label className="relative min-w-0 flex-1">
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                value={set.reps || ''}
+                placeholder="0"
+                onChange={(e) => onSetChange(i, { reps: Number(e.target.value) })}
+                className="h-12 w-full min-w-0 rounded-lg border border-transparent bg-zinc-900/70 pr-9 pl-3 font-mono text-lg text-white tabular-nums outline-none transition placeholder:text-zinc-600 focus:border-lime-300/60"
+              />
+              <span className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 font-mono text-[11px] text-zinc-500">
+                reps
+              </span>
+            </label>
+
             <button
               type="button"
               onClick={() => onSetChange(i, { done: !set.done })}
               aria-label={`Valider la série ${i + 1}`}
-              className={`flex h-11 items-center justify-center rounded-lg transition duration-200 active:scale-95 ${
+              className={`grid h-12 w-12 shrink-0 place-items-center rounded-lg transition duration-200 active:scale-95 ${
                 set.done
                   ? 'bg-lime-300 text-zinc-950'
-                  : 'border border-zinc-700/70 bg-zinc-800/70 text-zinc-600 hover:text-zinc-400'
+                  : 'border border-zinc-700 bg-zinc-900/70 text-zinc-600 hover:text-zinc-300'
               }`}
             >
-              <Check size={18} weight="bold" />
+              <Check size={20} weight="bold" />
             </button>
           </div>
         ))}
