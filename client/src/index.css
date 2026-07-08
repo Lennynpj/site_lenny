@@ -1,0 +1,87 @@
+@import '@fontsource-variable/outfit';
+@import '@fontsource-variable/jetbrains-mono';
+@import 'tailwindcss';
+
+@theme {
+  --color-accent: #bef264; /* lime-300 — accent unique */
+  --font-sans: 'Outfit Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+html {
+  background-color: #09090b; /* zinc-950 */
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100dvh;
+  color: #d4d4d8; /* zinc-300 */
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Chiffres alignés partout (kg, reps, dates) */
+body {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Enlève les flèches des inputs numériques (saisie au pouce) */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Apparition en cascade des cartes/lignes : style={{ '--i': index }} */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  opacity: 0;
+  animation: rise-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Pulsation douce (point « aujourd'hui ») */
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.8);
+  }
+}
+.pulse-dot {
+  animation: soft-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Shimmer des squelettes de chargement */
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.skeleton {
+  border-radius: 0.75rem;
+  background: linear-gradient(100deg, #18181b 40%, #27272a 50%, #18181b 60%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
