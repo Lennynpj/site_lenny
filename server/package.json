@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
-    "seed": "tsx seed/seed.ts"
+    "seed": "tsx seed/seed.ts",
+    "seed:comptes": "tsx seed/seed-comptes.ts"
   },
   "dependencies": {
     "cors": "^2.8.6",
