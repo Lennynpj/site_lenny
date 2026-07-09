@@ -1,21 +1,40 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
-import { CalendarBlank, Plus, TrendUp } from '@phosphor-icons/react'
+import { CalendarBlank, Plus, Receipt, TrashSimple, TrendUp } from '@phosphor-icons/react'
 import { catMeta, comptesApi, formatDueDate, formatEuro } from '../../lib/comptes'
-import type { Summary } from '../../lib/comptes'
+import type { Summary, Transaction } from '../../lib/comptes'
 import { CardSkeleton, ErrorBox } from './components/ui'
 import AddExpenseSheet from './components/AddExpenseSheet'
 
+function isThisMonth(iso?: string) {
+  if (!iso) return false
+  const d = new Date(iso)
+  const now = new Date()
+  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()
+}
+
 export default function DashboardPage() {
   const [summary, setSummary] = useState<Summary | null>(null)
+  const [transactions, setTransactions] = useState<Transaction[]>([])
   const [error, setError] = useState<string | null>(null)
   const [addOpen, setAddOpen] = useState(false)
 
   const load = useCallback(() => {
-    comptesApi.summary().then(setSummary).catch((e) => setError(e.message))
+    Promise.all([comptesApi.summary(), comptesApi.transactions.list()])
+      .then(([s, txs]) => {
+        setSummary(s)
+        setTransactions(txs.filter((t) => isThisMonth(t.date)))
+      })
+      .catch((e) => setError(e.message))
   }, [])
 
   useEffect(() => load(), [load])
+
+  async function removeTx(t: Transaction) {
+    if (!t._id || !confirm(`Supprimer « ${t.label} » (${formatEuro(t.amount)}) ?`)) return
+    await comptesApi.transactions.remove(t._id)
+    load()
+  }
 
   if (error) return <ErrorBox message={error} />
   if (!summary)
@@ -40,9 +59,10 @@ export default function DashboardPage() {
         <p className={`mt-1 text-4xl font-bold tracking-tighter ${positive ? 'text-white' : 'text-red-400'}`}>
           {formatEuro(summary.resteAVivre)}
         </p>
-        <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+        <div className="mt-4 grid grid-cols-4 gap-1.5 text-center">
           <Stat label="Revenus" value={formatEuro(summary.incomeMonthly, false)} tone="text-emerald-300" />
           <Stat label="Fixes" value={formatEuro(summary.subsMonthly, false)} tone="text-zinc-300" />
+          <Stat label="Dépenses" value={formatEuro(summary.variableThisMonth, false)} tone="text-red-300" />
           <Stat label="Épargne" value={formatEuro(summary.epargneThisMonth, false)} tone="text-sky-300" />
         </div>
       </div>
@@ -70,8 +90,52 @@ export default function DashboardPage() {
         <Plus size={18} weight="bold" /> Ajouter une dépense
       </button>
 
-      {/* Prochains prélèvements */}
+      {/* Dépenses du mois (courses, essence…) */}
       <section className="rise mt-6" style={{ '--i': 3 } as React.CSSProperties}>
+        <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-zinc-300">
+          <Receipt size={16} className="text-zinc-500" /> Dépenses du mois
+          <span className="ml-auto font-mono text-xs font-normal text-zinc-500">
+            {formatEuro(summary.variableThisMonth)}
+          </span>
+        </h2>
+        {transactions.length === 0 ? (
+          <p className="rounded-xl bg-zinc-900/60 p-4 text-sm text-zinc-500">
+            Aucune dépense ce mois-ci. Utilise « Ajouter une dépense » avec tes modèles (Courses, Essence…).
+          </p>
+        ) : (
+          <ul className="divide-y divide-zinc-800/60 rounded-2xl border border-zinc-800/60 bg-zinc-900/50">
+            {transactions.map((t) => {
+              const c = catMeta(t.category)
+              const tone = t.kind === 'revenu' ? 'text-emerald-300' : t.kind === 'epargne' ? 'text-sky-300' : 'text-red-300'
+              const sign = t.kind === 'revenu' ? '+' : t.kind === 'epargne' ? '↓' : '−'
+              return (
+                <li key={t._id} className="flex items-center gap-3 px-4 py-3">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: c.color }} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm text-zinc-200">{t.label}</p>
+                    <p className="font-mono text-[11px] text-zinc-500">
+                      {t.date ? new Date(t.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : ''}
+                    </p>
+                  </div>
+                  <span className={`font-mono text-sm ${tone}`}>
+                    {sign}{formatEuro(t.amount)}
+                  </span>
+                  <button
+                    onClick={() => removeTx(t)}
+                    aria-label="Supprimer"
+                    className="flex h-7 w-7 items-center justify-center rounded-full text-zinc-600 transition hover:text-red-400 active:scale-95"
+                  >
+                    <TrashSimple size={14} />
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </section>
+
+      {/* Prochains prélèvements */}
+      <section className="rise mt-6" style={{ '--i': 4 } as React.CSSProperties}>
         <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-zinc-300">
           <CalendarBlank size={16} className="text-zinc-500" /> Prochains prélèvements
         </h2>
@@ -101,7 +165,7 @@ export default function DashboardPage() {
 
       {/* Répartition par catégorie */}
       {pie.length > 0 && (
-        <section className="rise mt-6" style={{ '--i': 4 } as React.CSSProperties}>
+        <section className="rise mt-6" style={{ '--i': 5 } as React.CSSProperties}>
           <h2 className="mb-2 text-sm font-semibold text-zinc-300">Répartition des dépenses</h2>
           <div className="flex items-center gap-4 rounded-2xl border border-zinc-800/60 bg-zinc-900/50 p-4">
             <div className="h-32 w-32 shrink-0">
@@ -139,9 +203,9 @@ export default function DashboardPage() {
 
 function Stat({ label, value, tone }: { label: string; value: string; tone: string }) {
   return (
-    <div className="rounded-xl bg-black/20 py-2">
-      <p className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase">{label}</p>
-      <p className={`mt-0.5 font-mono text-sm font-semibold ${tone}`}>{value}</p>
+    <div className="min-w-0 rounded-xl bg-black/20 px-1 py-2">
+      <p className="truncate font-mono text-[9px] tracking-wider text-zinc-500 uppercase">{label}</p>
+      <p className={`mt-0.5 truncate font-mono text-[13px] font-semibold ${tone}`}>{value}</p>
     </div>
   )
 }

@@ -62,6 +62,20 @@ export default function AddExpenseSheet({ open, onClose, onAdded }: { open: bool
         />
       ) : (
         <div className="space-y-4">
+          {templates.length === 0 && (
+            <button
+              onClick={() => setManage(true)}
+              className="flex w-full items-center gap-3 rounded-xl border border-dashed border-emerald-400/40 bg-emerald-400/[0.05] px-4 py-3.5 text-left transition hover:border-emerald-400/60 active:scale-[0.99]"
+            >
+              <Plus size={18} className="shrink-0 text-emerald-300" />
+              <span>
+                <span className="block text-sm font-medium text-emerald-200">Crée tes objets de dépense</span>
+                <span className="block text-xs text-zinc-500">
+                  Ex. « Courses » à 50 € — ensuite un tap suffit pour l'ajouter
+                </span>
+              </span>
+            </button>
+          )}
           {templates.length > 0 && (
             <div>
               <p className="mb-2 font-mono text-[11px] tracking-wider text-zinc-500 uppercase">Modèles</p>
@@ -137,22 +151,43 @@ function TemplateManager({
     <div className="space-y-4">
       <ul className="space-y-2">
         {templates.map((t) => (
-          <li key={t._id} className="flex items-center gap-2 rounded-xl bg-zinc-800/40 px-3 py-2.5">
-            <span className="flex-1 text-sm text-zinc-200">{t.label}</span>
-            <span className="font-mono text-xs text-zinc-500">{t.defaultAmount} €</span>
+          <li key={t._id} className="flex items-center gap-2 rounded-xl bg-zinc-800/40 px-3 py-2">
+            <span className="min-w-0 flex-1 truncate text-sm text-zinc-200">{t.label}</span>
+            <div className="relative w-24">
+              <input
+                type="number"
+                inputMode="decimal"
+                min={0}
+                step={0.5}
+                defaultValue={t.defaultAmount || ''}
+                placeholder="0"
+                onBlur={async (e) => {
+                  const v = Number(e.target.value)
+                  if (t._id && v >= 0 && v !== t.defaultAmount) {
+                    await comptesApi.templates.update(t._id, { defaultAmount: v })
+                    onChange()
+                  }
+                }}
+                className="h-9 w-full rounded-lg border border-zinc-700/70 bg-zinc-900/70 pr-6 pl-2 text-right font-mono text-sm text-white tabular-nums outline-none transition focus:border-emerald-400/60"
+              />
+              <span className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 font-mono text-xs text-zinc-500">
+                €
+              </span>
+            </div>
             <button
               onClick={async () => {
-                if (t._id) await comptesApi.templates.remove(t._id)
+                if (!t._id || !confirm(`Supprimer le modèle « ${t.label} » ?`)) return
+                await comptesApi.templates.remove(t._id)
                 onChange()
               }}
               aria-label="Supprimer le modèle"
-              className="text-zinc-600 transition hover:text-red-400 active:scale-95"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-600 transition hover:text-red-400 active:scale-95"
             >
               <TrashSimple size={16} />
             </button>
           </li>
         ))}
-        {templates.length === 0 && <p className="text-sm text-zinc-500">Aucun modèle pour l'instant.</p>}
+        {templates.length === 0 && <p className="text-sm text-zinc-500">Aucun modèle pour l'instant — crée le premier ci-dessous.</p>}
       </ul>
 
       <div className="rounded-xl border border-dashed border-zinc-700 p-3">

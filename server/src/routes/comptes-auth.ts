@@ -5,7 +5,7 @@ import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse,
 } from '@simplewebauthn/server'
-import { Profile } from '../models/comptes.js'
+import { Profile, ExpenseTemplate } from '../models/comptes.js'
 import { hashPassword, verifyPassword, issueToken, verifyToken, RP_ID, RP_NAME, RP_ORIGIN } from '../lib/auth.js'
 
 export interface AuthedRequest extends Request {
@@ -46,6 +46,12 @@ router.post('/profiles', async (req, res) => {
   if ((await Profile.countDocuments()) >= 5) return res.status(400).json({ error: 'Nombre max de profils atteint' })
   const { hash, salt } = hashPassword(String(password))
   const profile = await Profile.create({ name, avatarColor, passwordHash: hash, passwordSalt: salt })
+  // Modèles de dépense de départ (modifiables/supprimables dans l'app)
+  await ExpenseTemplate.create([
+    { profileId: profile._id, label: 'Courses', defaultAmount: 50, category: 'alimentation', color: '#34d399' },
+    { profileId: profile._id, label: 'Essence', defaultAmount: 60, category: 'transport', color: '#f59e0b' },
+    { profileId: profile._id, label: 'Resto', defaultAmount: 25, category: 'sorties', color: '#f472b6' },
+  ])
   res.status(201).json({ token: issueToken(String(profile._id)), profile: publicProfile(profile) })
 })
 
