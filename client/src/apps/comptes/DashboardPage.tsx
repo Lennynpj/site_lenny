@@ -50,6 +50,8 @@ export default function DashboardPage() {
 
   return (
     <div>
+      <div className="md:grid md:grid-cols-2 md:items-start md:gap-6">
+      <div>
       {/* Reste à vivre — carte héros */}
       <div
         className="rise rounded-3xl border border-emerald-400/20 bg-gradient-to-br from-emerald-400/10 via-zinc-900 to-zinc-900 p-6"
@@ -134,8 +136,11 @@ export default function DashboardPage() {
         )}
       </section>
 
+      </div>
+
+      <div>
       {/* Prochains prélèvements */}
-      <section className="rise mt-6" style={{ '--i': 4 } as React.CSSProperties}>
+      <section className="rise mt-6 md:mt-0" style={{ '--i': 4 } as React.CSSProperties}>
         <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-zinc-300">
           <CalendarBlank size={16} className="text-zinc-500" /> Prochains prélèvements
         </h2>
@@ -195,6 +200,8 @@ export default function DashboardPage() {
           </div>
         </section>
       )}
+      </div>
+      </div>
 
       <AddExpenseSheet open={addOpen} onClose={() => setAddOpen(false)} onAdded={load} />
     </div>

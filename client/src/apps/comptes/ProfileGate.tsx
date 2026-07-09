@@ -23,7 +23,7 @@ export default function ProfileGate({ onAuthed }: { onAuthed: (p: ProfilePublic)
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-xl px-5 pt-14 pb-10">
+    <div className="mx-auto min-h-dvh max-w-xl px-5 pt-14 pb-10 md:max-w-md">
       <Link to="/" className="mb-8 inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white">
         <CaretLeft size={16} /> Hub
       </Link>

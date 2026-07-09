@@ -63,7 +63,7 @@ export default function SubscriptionsPage() {
       {subs.length === 0 ? (
         <EmptyState icon={<ArrowsClockwise size={26} />} title="Aucun abonnement" hint="Ajoute Netflix, ta salle, ton loyer… avec leur date de prélèvement." />
       ) : (
-        <ul className="space-y-2.5">
+        <ul className="space-y-2.5 md:grid md:grid-cols-2 md:items-start md:gap-3 md:space-y-0">
           {sorted.map((s, i) => {
             const c = catMeta(s.category)
             return (

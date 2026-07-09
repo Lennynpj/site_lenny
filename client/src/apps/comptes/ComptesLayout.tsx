@@ -47,7 +47,7 @@ function AuthedLayout({ profile, onLogout }: { profile: ProfilePublic; onLogout:
   const [menu, setMenu] = useState(false)
 
   return (
-    <div className="mx-auto min-h-dvh max-w-xl">
+    <div className="mx-auto min-h-dvh max-w-xl md:max-w-5xl">
       <header className="sticky top-0 z-20 border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md">
         <div className="flex items-center gap-1 px-3 py-3">
           <Link

@@ -241,7 +241,7 @@ export default function TodayPage() {
       )}
 
       {day.type === 'muscu' && (
-        <div className="space-y-4">
+        <div className="space-y-4 md:grid md:grid-cols-2 md:items-start md:gap-4 md:space-y-0">
           {day.blocks.map((block, bi) => {
             const cards = block.items.map((item) => {
               const exercise = exercises[item.exerciseSlug]

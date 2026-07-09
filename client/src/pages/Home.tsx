@@ -25,7 +25,7 @@ export default function Home() {
   const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
 
   return (
-    <div className="mx-auto max-w-xl px-5 pt-14 pb-10">
+    <div className="mx-auto max-w-xl px-5 pt-14 pb-10 md:max-w-4xl">
       <header className="rise mb-12" style={{ '--i': 0 } as React.CSSProperties}>
         <p className="font-mono text-[11px] font-medium tracking-[0.25em] text-lime-300/80 uppercase">
           Ton hub perso
@@ -36,6 +36,7 @@ export default function Home() {
         </p>
       </header>
 
+      <div className="grid gap-4 md:grid-cols-2">
       <Link
         to="/muscu"
         className="rise group block rounded-2xl border border-lime-300/20 bg-gradient-to-br from-lime-300/10 via-zinc-900 to-zinc-900 p-6 transition duration-300 hover:border-lime-300/40 active:scale-[0.98]"
@@ -66,7 +67,7 @@ export default function Home() {
 
       <Link
         to="/comptes"
-        className="rise group mt-4 block rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-400/10 via-zinc-900 to-zinc-900 p-6 transition duration-300 hover:border-emerald-400/40 active:scale-[0.98]"
+        className="rise group mt-4 block rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-emerald-400/10 via-zinc-900 to-zinc-900 p-6 transition duration-300 hover:border-emerald-400/40 active:scale-[0.98] md:mt-0"
         style={{ '--i': 2 } as React.CSSProperties}
       >
         <div className="flex items-center justify-between gap-4">
@@ -91,6 +92,7 @@ export default function Home() {
           />
         </div>
       </Link>
+      </div>
 
       <section className="rise mt-12" style={{ '--i': 3 } as React.CSSProperties}>
         <p className="mb-2 font-mono text-[11px] font-medium tracking-[0.25em] text-zinc-600 uppercase">

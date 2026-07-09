@@ -49,7 +49,7 @@ export default function HistoryPage() {
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-3 md:grid md:grid-cols-2 md:items-start md:gap-4 md:space-y-0">
         {sessions.map((session, i) => (
           <div
             key={session._id}

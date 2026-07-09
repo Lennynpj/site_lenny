@@ -51,7 +51,7 @@ export default function IncomesPage() {
       {incomes.length === 0 ? (
         <EmptyState icon={<Coins size={26} />} title="Aucun revenu" hint="Ajoute ton salaire, tes revenus freelance…" />
       ) : (
-        <ul className="space-y-2.5">
+        <ul className="space-y-2.5 md:grid md:grid-cols-2 md:items-start md:gap-3 md:space-y-0">
           {incomes.map((i, idx) => (
             <li
               key={i._id}

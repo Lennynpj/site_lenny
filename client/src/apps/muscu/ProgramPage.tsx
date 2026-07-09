@@ -116,7 +116,7 @@ export default function ProgramPage() {
         <p className="mb-3 rounded-xl border border-red-900/50 bg-red-950/40 p-3 text-sm text-red-300">{error}</p>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-3 md:grid md:grid-cols-2 md:items-start md:gap-4 md:space-y-0">
         {WEEK_ORDER.map((wd, order) => {
           const dayIdx = program.days.findIndex((d) => d.weekday === wd)
           if (dayIdx === -1) return null

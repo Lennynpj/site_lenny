@@ -55,7 +55,7 @@ export default function AssetsPage() {
       {assets.length === 0 ? (
         <EmptyState icon={<Vault size={26} />} title="Aucun compte" hint="Ajoute ton compte courant, ton Livret A, ton PEA…" />
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-3 md:grid md:grid-cols-2 md:items-start md:gap-3 md:space-y-0">
           {assets.map((a, i) => (
             <li
               key={a._id}
