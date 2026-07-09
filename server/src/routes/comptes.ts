@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import type { Model } from 'mongoose'
 import { Income, Subscription, ExpenseTemplate, Transaction, Asset } from '../models/comptes.js'
+import { requireProfile, type AuthedRequest } from './comptes-auth.js'
 import {
   monthlyAmount,
   nextDueDate,
@@ -12,21 +13,28 @@ import {
 
 const router = Router()
 
-// Fabrique de routes CRUD standard pour un modèle
+// Toutes les routes de données exigent un profil authentifié
+router.use(requireProfile)
+
+// Fabrique de routes CRUD, cloisonnées par profileId
 function crud(path: string, Mdl: Model<any>, sort: Record<string, 1 | -1> = { createdAt: -1 }) {
-  router.get(`/${path}`, async (_req, res) => {
-    res.json(await Mdl.find().sort(sort))
+  router.get(`/${path}`, async (req: AuthedRequest, res) => {
+    res.json(await Mdl.find({ profileId: req.profileId }).sort(sort))
   })
-  router.post(`/${path}`, async (req, res) => {
-    res.status(201).json(await Mdl.create(req.body))
+  router.post(`/${path}`, async (req: AuthedRequest, res) => {
+    res.status(201).json(await Mdl.create({ ...req.body, profileId: req.profileId }))
   })
-  router.put(`/${path}/:id`, async (req, res) => {
-    const doc = await Mdl.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+  router.put(`/${path}/:id`, async (req: AuthedRequest, res) => {
+    const doc = await Mdl.findOneAndUpdate(
+      { _id: req.params.id, profileId: req.profileId },
+      { ...req.body, profileId: req.profileId },
+      { new: true, runValidators: true }
+    )
     if (!doc) return res.status(404).json({ error: 'Introuvable' })
     res.json(doc)
   })
-  router.delete(`/${path}/:id`, async (req, res) => {
-    await Mdl.findByIdAndDelete(req.params.id)
+  router.delete(`/${path}/:id`, async (req: AuthedRequest, res) => {
+    await Mdl.findOneAndDelete({ _id: req.params.id, profileId: req.profileId })
     res.status(204).end()
   })
 }
@@ -38,18 +46,19 @@ crud('transactions', Transaction, { date: -1 })
 crud('assets', Asset, { createdAt: 1 })
 
 // Mettre de côté : transfère du courant vers un placement + enregistre la transaction
-router.post('/set-aside', async (req, res) => {
+router.post('/set-aside', async (req: AuthedRequest, res) => {
   const { assetId, amount, label } = req.body
-  const asset = await Asset.findById(assetId)
+  const asset = await Asset.findOne({ _id: assetId, profileId: req.profileId })
   if (!asset) return res.status(404).json({ error: 'Placement introuvable' })
   asset.balance += Number(amount)
   await asset.save()
-  const current = await Asset.findOne({ type: 'courant' })
+  const current = await Asset.findOne({ type: 'courant', profileId: req.profileId })
   if (current) {
     current.balance -= Number(amount)
     await current.save()
   }
   const tx = await Transaction.create({
+    profileId: req.profileId,
     label: label || `Épargne → ${asset.name}`,
     amount: Number(amount),
     kind: 'epargne',
@@ -59,16 +68,17 @@ router.post('/set-aside', async (req, res) => {
 })
 
 // Moyenne mensuelle des dépenses variables sur les 3 derniers mois
-async function estimateMonthlyVariable(): Promise<number> {
+async function estimateMonthlyVariable(profileId: string): Promise<number> {
   const from = new Date()
   from.setMonth(from.getMonth() - 3)
-  const txs = await Transaction.find({ kind: 'depense', date: { $gte: from } })
+  const txs = await Transaction.find({ profileId, kind: 'depense', date: { $gte: from } })
   const total = txs.reduce((s, t) => s + t.amount, 0)
   return total / 3
 }
 
 // GET /summary?month=YYYY-MM
-router.get('/summary', async (req, res) => {
+router.get('/summary', async (req: AuthedRequest, res) => {
+  const profileId = req.profileId
   const monthStr = String(req.query.month || '')
   const now = new Date()
   const [y, m] = /^\d{4}-\d{2}$/.test(monthStr)
@@ -78,10 +88,10 @@ router.get('/summary', async (req, res) => {
   const monthEnd = new Date(y, m, 1)
 
   const [incomes, subs, txs, assets] = await Promise.all([
-    Income.find({ active: true }),
-    Subscription.find({ active: true }),
-    Transaction.find({ date: { $gte: monthStart, $lt: monthEnd } }),
-    Asset.find(),
+    Income.find({ profileId, active: true }),
+    Subscription.find({ profileId, active: true }),
+    Transaction.find({ profileId, date: { $gte: monthStart, $lt: monthEnd } }),
+    Asset.find({ profileId }),
   ])
 
   const incomeMonthly = incomes
@@ -95,7 +105,6 @@ router.get('/summary', async (req, res) => {
 
   const resteAVivre = incomeMonthly + incomePonctuel - subsMonthly - variableThisMonth - epargneThisMonth
 
-  // Répartition des dépenses par catégorie (abonnements mensualisés + dépenses variables)
   const byCategory: Record<string, number> = {}
   for (const x of subs) {
     const c = x.category || 'autre'
@@ -109,7 +118,6 @@ router.get('/summary', async (req, res) => {
     .map(([category, amount]) => ({ category, amount: Math.round(amount * 100) / 100 }))
     .sort((a, b) => b.amount - a.amount)
 
-  // Prochains prélèvements (6 prochaines échéances)
   const nextDebits = subs
     .map((x) => {
       const due = nextDueDate(x.dayOfMonth)
@@ -135,15 +143,16 @@ router.get('/summary', async (req, res) => {
 })
 
 // POST /projection  { horizonMonths, events?: [...] }
-router.post('/projection', async (req, res) => {
+router.post('/projection', async (req: AuthedRequest, res) => {
+  const profileId = req.profileId!
   const horizonMonths = Math.min(Math.max(Number(req.body.horizonMonths) || 12, 1), 120)
   const events: SimEvent[] = Array.isArray(req.body.events) ? req.body.events : []
 
   const [incomes, subs, assets, variable] = await Promise.all([
-    Income.find({ active: true, type: 'recurrent' }),
-    Subscription.find({ active: true }),
-    Asset.find(),
-    estimateMonthlyVariable(),
+    Income.find({ profileId, active: true, type: 'recurrent' }),
+    Subscription.find({ profileId, active: true }),
+    Asset.find({ profileId }),
+    estimateMonthlyVariable(profileId),
   ])
 
   const incomeMonthly = incomes.reduce(

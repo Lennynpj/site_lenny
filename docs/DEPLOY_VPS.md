@@ -44,6 +44,27 @@ docker exec eventpics-caddy caddy reload --config /etc/caddy/Caddyfile
 
 et crée l'enregistrement DNS (`muscu` → type A → IP du VPS).
 
+### Profils Comptes (auth + Face ID)
+
+L'app Comptes protège les données par profil (mot de passe + Face ID). Avant le
+`docker compose up`, crée un fichier `.env` **à la racine du repo** avec un vrai
+secret de session :
+
+```bash
+cd site_lenny
+cat > .env <<EOF
+AUTH_SECRET=$(openssl rand -hex 32)
+WEBAUTHN_RP_ID=muscu.slidecraft.fr
+WEBAUTHN_ORIGIN=https://muscu.slidecraft.fr
+EOF
+docker compose up -d --build
+```
+
+Le **Face ID** ne marche qu'en HTTPS (donc sur `muscu.slidecraft.fr`, pas en
+local par IP). Les profils se créent directement depuis l'app (bouton
+« Nouveau profil »). Le `seed:comptes` crée un profil de démo « Lenny »
+(mot de passe `1234`) — à supprimer/changer une fois tes vrais profils créés.
+
 ### Cas B — sans Caddy, ou Caddy hors Docker
 
 Là on expose un port de l'hôte via l'override `expose` :

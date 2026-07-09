@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import exercisesRouter from './routes/exercises.js'
 import programRouter from './routes/program.js'
 import sessionsRouter from './routes/sessions.js'
+import comptesAuthRouter from './routes/comptes-auth.js'
 import comptesRouter from './routes/comptes.js'
 
 const app = express()
@@ -15,6 +16,8 @@ app.get('/api/health', (_req, res) => res.json({ ok: true }))
 app.use('/api/exercises', exercisesRouter)
 app.use('/api/program', programRouter)
 app.use('/api/sessions', sessionsRouter)
+// Auth d'abord (routes publiques /profiles, /auth/*), puis les données (protégées)
+app.use('/api/comptes', comptesAuthRouter)
 app.use('/api/comptes', comptesRouter)
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/site_lenny'

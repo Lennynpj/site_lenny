@@ -1,9 +1,36 @@
 // Modèles de l'app Comptes (budget + patrimoine + projection)
 import { Schema, model } from 'mongoose'
 
+// Profil (multi-utilisateur : Lenny, sa mère…) — données cloisonnées par profileId
+const webauthnCredentialSchema = new Schema(
+  {
+    credentialId: { type: String, required: true },
+    publicKey: { type: String, required: true }, // base64url
+    counter: { type: Number, default: 0 },
+    deviceLabel: String,
+  },
+  { _id: false }
+)
+
+const profileSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    avatarColor: { type: String, default: '#34d399' },
+    passwordHash: { type: String, required: true },
+    passwordSalt: { type: String, required: true },
+    webauthnCredentials: { type: [webauthnCredentialSchema], default: [] },
+    // challenge temporaire (register/login WebAuthn)
+    currentChallenge: String,
+  },
+  { timestamps: true }
+)
+
+const pid = { type: Schema.Types.ObjectId, ref: 'Profile', required: true, index: true }
+
 // Revenu — récurrent (salaire…) ou ponctuel
 const incomeSchema = new Schema(
   {
+    profileId: pid,
     label: { type: String, required: true },
     amount: { type: Number, required: true },
     type: { type: String, enum: ['recurrent', 'ponctuel'], default: 'recurrent' },
@@ -20,6 +47,7 @@ const incomeSchema = new Schema(
 // Abonnement / dépense récurrente avec date de prélèvement
 const subscriptionSchema = new Schema(
   {
+    profileId: pid,
     name: { type: String, required: true },
     amount: { type: Number, required: true },
     dayOfMonth: { type: Number, required: true, min: 1, max: 31 },
@@ -35,6 +63,7 @@ const subscriptionSchema = new Schema(
 // Modèle de dépense réutilisable (ex. « Courses » à 50 € par défaut)
 const expenseTemplateSchema = new Schema(
   {
+    profileId: pid,
     label: { type: String, required: true },
     defaultAmount: { type: Number, default: 0 },
     category: { type: String, default: 'autre' },
@@ -47,6 +76,7 @@ const expenseTemplateSchema = new Schema(
 // Mouvement ponctuel : dépense, rentrée exceptionnelle, ou mise de côté (épargne)
 const transactionSchema = new Schema(
   {
+    profileId: pid,
     label: { type: String, required: true },
     amount: { type: Number, required: true },
     date: { type: Date, default: () => new Date() },
@@ -62,6 +92,7 @@ const transactionSchema = new Schema(
 // Compte / placement (compte courant, Livret A, PEA, perso…)
 const assetSchema = new Schema(
   {
+    profileId: pid,
     name: { type: String, required: true },
     type: {
       type: String,
@@ -76,6 +107,7 @@ const assetSchema = new Schema(
   { timestamps: true }
 )
 
+export const Profile = model('Profile', profileSchema)
 export const Income = model('Income', incomeSchema)
 export const Subscription = model('Subscription', subscriptionSchema)
 export const ExpenseTemplate = model('ExpenseTemplate', expenseTemplateSchema)

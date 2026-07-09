@@ -15,6 +15,12 @@ services:
     environment:
       MONGODB_URI: mongodb://mongo:27017/site_lenny
       PORT: "3001"
+      # Auth des profils Comptes. Mets un vrai secret dans un fichier .env à la
+      # racine (AUTH_SECRET=...) — sinon les sessions ne sont pas sûres.
+      AUTH_SECRET: ${AUTH_SECRET:-dev-secret-change-me}
+      # Face ID (WebAuthn) : domaine public du site.
+      WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-muscu.slidecraft.fr}
+      WEBAUTHN_ORIGIN: ${WEBAUTHN_ORIGIN:-https://muscu.slidecraft.fr}
     depends_on:
       - mongo
 

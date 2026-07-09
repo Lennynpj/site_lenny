@@ -1,4 +1,5 @@
 // Types + API client de l'app Comptes
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
 
 export interface Income {
   _id?: string
@@ -106,14 +107,27 @@ export interface Projection {
   simule: ProjectionPoint[] | null
 }
 
+// ── Jeton de session (profil) ────────────────────────────────────
+const TOKEN_KEY = 'comptes_token'
+export const getToken = () => localStorage.getItem(TOKEN_KEY)
+export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t)
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY)
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const token = getToken()
   const res = await fetch(`/api/comptes${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { 'x-profile-token': token } : {}),
+    },
     ...options,
   })
   if (!res.ok) {
     const body = await res.json().catch(() => null)
-    throw new Error(body?.error ?? `Erreur API (${res.status})`)
+    if (res.status === 401) clearToken()
+    const err = new Error(body?.error ?? `Erreur API (${res.status})`) as Error & { status?: number }
+    err.status = res.status
+    throw err
   }
   if (res.status === 204) return undefined as T
   return res.json()
@@ -128,6 +142,50 @@ function crud<T extends { _id?: string }>(path: string) {
       request<T>(`/${path}/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
     remove: (id: string) => request<void>(`/${path}/${id}`, { method: 'DELETE' }),
   }
+}
+
+export interface ProfilePublic {
+  _id: string
+  name: string
+  avatarColor: string
+  hasFaceId: boolean
+}
+
+export const authApi = {
+  profiles: () => request<ProfilePublic[]>('/profiles'),
+  createProfile: (name: string, password: string, avatarColor: string) =>
+    request<{ token: string; profile: ProfilePublic }>('/profiles', {
+      method: 'POST',
+      body: JSON.stringify({ name, password, avatarColor }),
+    }),
+  login: (profileId: string, password: string) =>
+    request<{ token: string; profile: ProfilePublic }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ profileId, password }),
+    }),
+  me: () => request<ProfilePublic>('/auth/me'),
+  // Face ID / WebAuthn
+  faceIdSupported: () =>
+    typeof window !== 'undefined' && !!window.PublicKeyCredential && window.isSecureContext,
+  registerFaceId: async () => {
+    const options = await request<Record<string, unknown>>('/auth/webauthn/register/options', {
+      method: 'POST',
+      body: '{}',
+    })
+    const att = await startRegistration({ optionsJSON: options as never })
+    await request('/auth/webauthn/register/verify', { method: 'POST', body: JSON.stringify(att) })
+  },
+  loginFaceId: async (profileId: string) => {
+    const options = await request<Record<string, unknown>>('/auth/webauthn/login/options', {
+      method: 'POST',
+      body: JSON.stringify({ profileId }),
+    })
+    const asr = await startAuthentication({ optionsJSON: options as never })
+    return request<{ token: string; profile: ProfilePublic }>('/auth/webauthn/login/verify', {
+      method: 'POST',
+      body: JSON.stringify({ profileId, response: asr }),
+    })
+  },
 }
 
 export const comptesApi = {
