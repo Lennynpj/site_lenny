@@ -2,19 +2,49 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='12' width='4' height='8' rx='1.5' fill='%23bef264'/%3E%3Crect x='6' y='9' width='5' height='14' rx='1.5' fill='%23bef264'/%3E%3Crect x='21' y='9' width='5' height='14' rx='1.5' fill='%23bef264'/%3E%3Crect x='27' y='12' width='4' height='8' rx='1.5' fill='%23bef264'/%3E%3Crect x='11' y='14.5' width='10' height='3' rx='1.5' fill='%23bef264'/%3E%3C/svg%3E" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <meta name="theme-color" content="#09090b" />
     <title>Lenny — Hub</title>
+
+    <!-- Ouverture en plein écran depuis l'écran d'accueil (iOS) -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Comptes" />
+
+    <link rel="icon" type="image/png" sizes="192x192" href="/icones/muscu-192.png" />
+    <link rel="apple-touch-icon" href="/icones/muscu-apple-180.png" />
+    <link rel="manifest" href="/muscu.webmanifest" />
+
     <script>
-      // Pose le thème clair AVANT le premier rendu quand on ouvre directement
-      // l'app Comptes : évite le flash de fond sombre.
-      (function () {
-        if (location.pathname.indexOf('/comptes') === 0) {
-          document.documentElement.classList.add('theme-clair')
-          var m = document.querySelector('meta[name="theme-color"]')
-          if (m) m.setAttribute('content', '#ffffff')
+      // Avant le premier rendu : thème + identité de l'app (icône, manifeste,
+      // titre) selon la partie du site ouverte. Évite le flash de fond sombre
+      // et permet d'installer chaque app séparément sur l'écran d'accueil.
+      ;(function () {
+        var estComptes = location.pathname.indexOf('/comptes') === 0
+        var d = document
+        var set = function (sel, attr, val) {
+          var el = d.querySelector(sel)
+          if (el) el.setAttribute(attr, val)
         }
+        if (estComptes) {
+          d.documentElement.classList.add('theme-clair')
+          set('meta[name="theme-color"]', 'content', '#ffffff')
+          set('link[rel="manifest"]', 'href', '/comptes.webmanifest')
+          set('link[rel="icon"]', 'href', '/icones/comptes-192.png')
+          set('link[rel="apple-touch-icon"]', 'href', '/icones/comptes-apple-180.png')
+          set('meta[name="apple-mobile-web-app-title"]', 'content', 'Comptes')
+          d.title = 'Mes comptes'
+        } else if (location.pathname.indexOf('/muscu') === 0) {
+          set('meta[name="apple-mobile-web-app-title"]', 'content', 'Muscu')
+          d.title = 'Muscu'
+        }
+        // Marque le mode « installée » : sert à masquer le bandeau d'install.
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone)
+          d.documentElement.classList.add('installee')
       })()
     </script>
   </head>

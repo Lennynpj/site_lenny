@@ -89,6 +89,9 @@ export default function AccueilPage() {
         </div>
       )}
 
+      {/* Deux colonnes sur grand écran : décider à gauche, consulter à droite */}
+      <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-8">
+      <div>
       {/* Le chiffre — seule carte teintée de l'écran */}
       <section
         className="rise rounded-carte border border-trait-bleu bg-papier-bleu p-6"
@@ -164,9 +167,12 @@ export default function AccueilPage() {
         <LienAction onClick={() => setFeuille('revenu')}>J'ai reçu de l'argent</LienAction>
       </div>
 
+      </div>
+
+      <div className="lg:mt-0">
       {/* Ce qui arrive bientôt */}
       {resume.nextDebits.length > 0 && (
-        <section className="rise mt-7" style={{ '--i': 1 } as React.CSSProperties}>
+        <section className="rise mt-7 lg:mt-0" style={{ '--i': 1 } as React.CSSProperties}>
           <TitreSection>Ce qui arrive bientôt</TitreSection>
           <Liste>
             {resume.nextDebits.slice(0, 3).map((d, i) => (
@@ -208,6 +214,9 @@ export default function AccueilPage() {
           </Link>
         </section>
       )}
+
+      </div>
+      </div>
 
       <FeuilleDepense
         ouverte={feuille !== null}

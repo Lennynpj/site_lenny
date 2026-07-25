@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { CalendarBlank, House, PiggyBank, Receipt } from '@phosphor-icons/react'
 import type { Icon } from '@phosphor-icons/react'
 import { authApi, clearToken, getToken } from '../../lib/comptes'
@@ -87,10 +87,12 @@ function ConnecteeLayout({
   profil: ProfilePublic
   onQuitter: () => void
 }) {
+  const { pathname: chemin } = useLocation()
+
   return (
     <div className="min-h-dvh bg-papier">
       <header className="border-b border-trait bg-papier">
-        <div className="mx-auto flex max-w-xl items-center justify-between gap-3 px-5 py-3 md:max-w-3xl">
+        <div className="mx-auto flex max-w-xl items-center justify-between gap-3 px-5 py-3 md:max-w-3xl lg:max-w-5xl">
           <span className="text-titre-section font-bold tracking-tight text-encre">Mes comptes</span>
           <NavLink
             to="/comptes/reglages"
@@ -108,7 +110,7 @@ function ConnecteeLayout({
 
         {/* Sur PC la navigation passe en haut : une barre fixée en bas d'un
             grand écran est loin de la souris et déroutante. */}
-        <nav className="mx-auto hidden max-w-3xl gap-2 px-5 pb-3 md:grid md:grid-cols-4">
+        <nav className="mx-auto hidden max-w-3xl gap-2 px-5 pb-3 md:grid md:grid-cols-4 lg:max-w-5xl">
           {onglets.map((o) => (
             <NavLink
               key={o.to}
@@ -131,8 +133,12 @@ function ConnecteeLayout({
         </nav>
       </header>
 
-      <main className="mx-auto max-w-xl px-5 pt-6 pb-28 md:max-w-3xl md:pb-12">
-        <Outlet context={{ profil, onQuitter }} />
+      <main className="mx-auto max-w-xl px-5 pt-6 pb-28 md:max-w-3xl md:pb-12 lg:max-w-5xl">
+        {/* La clé relance l'apparition à chaque changement d'onglet : on sent
+            un changement d'écran, comme dans une application. */}
+        <div key={chemin} className="page-entre">
+          <Outlet context={{ profil, onQuitter }} />
+        </div>
       </main>
 
       {/* Barre du bas — mobile uniquement. Libellés TOUJOURS visibles. */}

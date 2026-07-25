@@ -84,6 +84,7 @@ export default function EpargnePage() {
         </div>
       )}
 
+      <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-8">
       <section className="rise mt-7" style={{ '--i': 2 } as React.CSSProperties}>
         <TitreSection>Où j'ai mis mon argent</TitreSection>
         {epargnes.length === 0 ? (
@@ -127,7 +128,7 @@ export default function EpargnePage() {
       </section>
 
       {epargnes.length > 0 && (
-        <section className="rise mt-7" style={{ '--i': 3 } as React.CSSProperties}>
+        <section className="rise mt-7 lg:mt-7" style={{ '--i': 3 } as React.CSSProperties}>
           <TitreSection>Si je continue comme ça</TitreSection>
           <Prevision assets={epargnes} />
         </section>
@@ -149,6 +150,8 @@ export default function EpargnePage() {
           </Liste>
         </section>
       )}
+
+      </div>
 
       {mettreDeCote && (
         <FeuilleMiseDeCote

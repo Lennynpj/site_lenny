@@ -34,6 +34,12 @@ export default function ReglagesPage() {
   const [messageFaceId, setMessageFaceId] = useState<string | null>(null)
   const [texteGrand, setTexteGrand] = useState(() => localStorage.getItem(CLE_TAILLE) === '1')
 
+  // Déjà ouverte depuis l'écran d'accueil ? Alors on ne propose plus de l'ajouter.
+  const estInstallee =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+  const surIphone = /iPhone|iPad|iPod/.test(navigator.userAgent)
+
   const charger = useCallback(() => {
     comptesApi.templates
       .list()
@@ -115,8 +121,35 @@ export default function ReglagesPage() {
         )}
       </section>
 
+      {/* Installation sur l'écran d'accueil */}
+      {!estInstallee && (
+        <section className="rise mt-8" style={{ '--i': 2 } as React.CSSProperties}>
+          <TitreSection>Mettre sur l'écran d'accueil</TitreSection>
+          <Carte>
+            <p className="text-corps text-encre-2">
+              Tu peux ajouter « Mes comptes » à côté de tes autres applications : elle s'ouvrira en
+              plein écran, sans la barre du navigateur.
+            </p>
+            <p className="mt-3 text-corps text-encre">
+              {surIphone ? (
+                <>
+                  Appuie sur le bouton <span className="font-semibold">Partager</span> en bas de
+                  Safari, puis sur <span className="font-semibold">Sur l'écran d'accueil</span>.
+                </>
+              ) : (
+                <>
+                  Ouvre le menu du navigateur (les trois points), puis choisis{' '}
+                  <span className="font-semibold">Installer l'application</span> ou{' '}
+                  <span className="font-semibold">Ajouter à l'écran d'accueil</span>.
+                </>
+              )}
+            </p>
+          </Carte>
+        </section>
+      )}
+
       {/* Face ID */}
-      <section className="rise mt-8" style={{ '--i': 2 } as React.CSSProperties}>
+      <section className="rise mt-8" style={{ '--i': 3 } as React.CSSProperties}>
         <TitreSection>Ouvrir sans code</TitreSection>
         {!authApi.faceIdSupported() ? (
           <Carte>

@@ -1,0 +1,23 @@
+{
+  "name": "Mes comptes",
+  "short_name": "Comptes",
+  "description": "Ce qui rentre, ce qui part, et ce qu'il te reste.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": "/comptes",
+  "scope": "/comptes",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    { "src": "/icones/comptes-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icones/comptes-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icones/comptes-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

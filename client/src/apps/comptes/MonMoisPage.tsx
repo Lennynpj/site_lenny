@@ -76,6 +76,7 @@ export default function MonMoisPage() {
       </h1>
       <p className="mt-1 text-corps text-encre-2 capitalize">{moisAnnee()}</p>
 
+      <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-8">
       {/* Calendrier */}
       <section className="rise mt-5 rounded-carte border border-trait bg-papier p-4" style={{ '--i': 1 } as React.CSSProperties}>
         <div className="mb-2 grid grid-cols-7 gap-1">
@@ -155,8 +156,9 @@ export default function MonMoisPage() {
         )}
       </section>
 
+      <div>
       {/* Ce qui rentre */}
-      <section className="rise mt-7" style={{ '--i': 2 } as React.CSSProperties}>
+      <section className="rise mt-7 lg:mt-5" style={{ '--i': 2 } as React.CSSProperties}>
         <TitreSection>Ce qui rentre chaque mois</TitreSection>
         {revenus.length === 0 ? (
           <RienPourLInstant
@@ -250,6 +252,9 @@ export default function MonMoisPage() {
           </>
         )}
       </section>
+
+      </div>
+      </div>
 
       {editionFacture && (
         <FormulaireFacture

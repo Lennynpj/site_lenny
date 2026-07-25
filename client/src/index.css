@@ -65,6 +65,38 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* ── Sensation « application » plutôt que « page web » ──────────────
+   Sans ça, on voit la page rebondir sur du blanc en fin de scroll, un
+   rectangle gris apparaît à chaque appui, et un double-tap zoome. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Supprime le délai de 300 ms et le zoom au double-tap sur les commandes */
+button,
+a,
+label,
+input,
+select,
+textarea,
+[role='button'] {
+  touch-action: manipulation;
+}
+
+/* Le texte des commandes ne doit pas se sélectionner par erreur au appui long ;
+   le contenu (montants, libellés) reste sélectionnable. */
+button,
+nav,
+[role='button'] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 /* Chiffres alignés partout (kg, reps, dates) */
 body {
   font-variant-numeric: tabular-nums;
@@ -154,6 +186,22 @@ html.theme-clair .rise {
 html.theme-clair :focus-visible {
   outline: 3px solid #1a56db;
   outline-offset: 2px;
+}
+
+/* Changement d'écran : court et discret (jamais de glissement latéral, qui
+   donnerait le mal de mer sur une app consultée plusieurs fois par jour). */
+@keyframes page-entre {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+html.theme-clair .page-entre {
+  animation: page-entre 0.18s cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
