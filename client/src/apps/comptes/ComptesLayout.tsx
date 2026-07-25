@@ -88,6 +88,11 @@ function ConnecteeLayout({
   onQuitter: () => void
 }) {
   const { pathname: chemin } = useLocation()
+  // -1 sur Réglages : la pastille disparaît plutôt que de rester sur un onglet
+  // qu'on a quitté.
+  const indexActif = onglets.findIndex((o) =>
+    o.end ? chemin === o.to : chemin.startsWith(o.to)
+  )
 
   return (
     <div className="min-h-dvh bg-papier">
@@ -141,29 +146,48 @@ function ConnecteeLayout({
         </div>
       </main>
 
-      {/* Barre du bas — mobile uniquement. Libellés TOUJOURS visibles. */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-trait bg-papier pb-[env(safe-area-inset-bottom)] md:hidden">
-        {onglets.map((o) => (
-          <NavLink
-            key={o.to}
-            to={o.to}
-            end={o.end}
-            className={({ isActive }) =>
-              `flex h-16 flex-col items-center justify-center gap-0.5 transition-colors duration-100 ${
-                isActive ? 'text-bleu' : 'text-encre-2'
-              }`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <o.icon size={25} weight={isActive ? 'fill' : 'regular'} />
-                <span className="text-[15px] leading-none font-semibold whitespace-nowrap">
-                  {o.label}
-                </span>
-              </>
-            )}
-          </NavLink>
-        ))}
+      {/* Le contenu se fond sous le dock au lieu de passer dessous net */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-papier via-papier/85 to-transparent md:hidden" />
+
+      {/* Dock flottant — mobile uniquement. Libellés TOUJOURS visibles. */}
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] md:hidden">
+        <div className="verre-clair relative w-full max-w-md rounded-[20px] p-1.5">
+          {/* Pastille qui glisse jusqu'à l'onglet actif (masquée hors onglets) */}
+          {indexActif >= 0 && (
+            <span
+              aria-hidden="true"
+              className="dock-indicateur pointer-events-none absolute top-1.5 bottom-1.5 left-1.5 rounded-[14px] bg-bleu"
+              style={{
+                width: 'calc((100% - 0.75rem) / 4)',
+                transform: `translateX(calc(${indexActif} * 100%))`,
+              }}
+            />
+          )}
+
+          <div className="relative grid grid-cols-4">
+            {onglets.map((o) => (
+              <NavLink
+                key={o.to}
+                to={o.to}
+                end={o.end}
+                className={({ isActive }) =>
+                  `flex h-[52px] flex-col items-center justify-center gap-1 rounded-[14px] transition-[color,transform] duration-200 active:scale-95 ${
+                    isActive ? 'text-papier' : 'text-encre-2'
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <o.icon size={22} weight={isActive ? 'fill' : 'regular'} />
+                    <span className="text-[12.5px] leading-none font-semibold whitespace-nowrap">
+                      {o.label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </div>
+        </div>
       </nav>
     </div>
   )
