@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useOutletContext } from 'react-router-dom'
 import { ArrowDown, ArrowRight, ArrowUp, Plus } from '@phosphor-icons/react'
 import { comptesApi } from '../../lib/comptes'
 import type { Summary, Transaction } from '../../lib/comptes'
 import { echeance, finDuMois, jourRelatif, memeMois, messageErreur, moisLong, montant } from './lib/mots'
 import { Banniere, GrosBouton, LienAction, Liste, MessageErreur, Squelette, TitreSection } from './components/ui'
 import FeuilleDepense from './components/FeuilleDepense'
+import MiseEnRoute, { CLE_FORCER, CLE_IGNOREE } from './MiseEnRoute'
+
+type Contexte = { profil: { name: string } }
 
 export default function AccueilPage() {
+  const { profil } = useOutletContext<Contexte>()
+  const [assistantForce, setAssistantForce] = useState(
+    () => localStorage.getItem(CLE_FORCER) === '1'
+  )
   const [resume, setResume] = useState<Summary | null>(null)
   const [dernieres, setDernieres] = useState<Transaction[]>([])
   const [erreur, setErreur] = useState<string | null>(null)
@@ -67,6 +74,20 @@ export default function AccueilPage() {
   const total = resume.incomeMonthly || 1
   const partiPct = Math.min(100, Math.max(0, (parti / total) * 100))
   const vide = resume.incomeMonthly === 0 && parti === 0
+
+  // Premier lancement (ou relance depuis Réglages) : on la guide pas à pas
+  // plutôt que de la laisser devant un écran vide.
+  if (assistantForce || (vide && localStorage.getItem(CLE_IGNOREE) !== '1')) {
+    return (
+      <MiseEnRoute
+        prenom={profil.name}
+        onTermine={() => {
+          setAssistantForce(false)
+          charger()
+        }}
+      />
+    )
+  }
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
-import { Check, Plus, ScanSmiley, SignOut, TextAa, TrashSimple } from '@phosphor-icons/react'
+import { useNavigate, useOutletContext } from 'react-router-dom'
+import { Check, ListChecks, Plus, ScanSmiley, SignOut, TextAa, TrashSimple } from '@phosphor-icons/react'
 import { authApi, comptesApi } from '../../lib/comptes'
 import type { ExpenseTemplate, ProfilePublic } from '../../lib/comptes'
 import { messageErreur } from './lib/mots'
@@ -26,6 +26,7 @@ const CLE_TAILLE = 'comptes_texte_grand'
 
 export default function ReglagesPage() {
   const { profil, onQuitter } = useOutletContext<Contexte>()
+  const naviguer = useNavigate()
   const [modeles, setModeles] = useState<ExpenseTemplate[] | null>(null)
   const [edition, setEdition] = useState<ExpenseTemplate | null>(null)
   const [aSupprimer, setASupprimer] = useState<ExpenseTemplate | null>(null)
@@ -198,8 +199,25 @@ export default function ReglagesPage() {
         </div>
       </section>
 
+      {/* Refaire la mise en route */}
+      <section className="rise mt-8" style={{ '--i': 4 } as React.CSSProperties}>
+        <TitreSection>Revoir mes informations</TitreSection>
+        <p className="mb-3 text-corps text-encre-2">
+          Reprends les trois questions du début : ce qui rentre, ce qui part, et tes boutons. Rien ne
+          sera effacé.
+        </p>
+        <BoutonSecondaire
+          onClick={() => {
+            localStorage.setItem('comptes_mise_en_route_forcer', '1')
+            naviguer('/comptes')
+          }}
+        >
+          <ListChecks size={20} /> Refaire la mise en route
+        </BoutonSecondaire>
+      </section>
+
       {/* Changer d'utilisateur */}
-      <section className="rise mt-8 mb-4" style={{ '--i': 4 } as React.CSSProperties}>
+      <section className="rise mt-8 mb-4" style={{ '--i': 5 } as React.CSSProperties}>
         <TitreSection>Cet appareil</TitreSection>
         <p className="mb-3 text-corps text-encre-2">
           Tu es connectée en tant que <span className="font-semibold text-encre">{profil.name}</span>. Tes
