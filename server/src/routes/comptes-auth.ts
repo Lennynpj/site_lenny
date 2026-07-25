@@ -6,7 +6,16 @@ import {
   verifyAuthenticationResponse,
 } from '@simplewebauthn/server'
 import { Profile, ExpenseTemplate } from '../models/comptes.js'
-import { hashPassword, verifyPassword, issueToken, verifyToken, RP_ID, RP_NAME, RP_ORIGIN } from '../lib/auth.js'
+import {
+  hashPassword,
+  verifyPassword,
+  issueToken,
+  verifyToken,
+  renewIfNeeded,
+  RP_ID,
+  RP_NAME,
+  RP_ORIGIN,
+} from '../lib/auth.js'
 
 export interface AuthedRequest extends Request {
   profileId?: string
@@ -64,11 +73,14 @@ router.post('/auth/login', async (req, res) => {
   res.json({ token: issueToken(String(profile._id)), profile: publicProfile(profile) })
 })
 
-// Profil courant
+// Profil courant. Fait glisser la session : tant qu'elle ouvre l'app,
+// elle n'est jamais déconnectée sans comprendre pourquoi.
 router.get('/auth/me', requireProfile, async (req: AuthedRequest, res) => {
   const profile = await Profile.findById(req.profileId)
   if (!profile) return res.status(404).json({ error: 'Profil introuvable' })
-  res.json(publicProfile(profile))
+  const token = (req.headers['x-profile-token'] as string) || undefined
+  const frais = renewIfNeeded(token, String(profile._id))
+  res.json({ ...publicProfile(profile), ...(frais ? { token: frais } : {}) })
 })
 
 // ── Face ID / WebAuthn ───────────────────────────────────────────

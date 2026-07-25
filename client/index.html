@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#09090b" />
     <title>Lenny — Hub</title>
+    <script>
+      // Pose le thème clair AVANT le premier rendu quand on ouvre directement
+      // l'app Comptes : évite le flash de fond sombre.
+      (function () {
+        if (location.pathname.indexOf('/comptes') === 0) {
+          document.documentElement.classList.add('theme-clair')
+          var m = document.querySelector('meta[name="theme-color"]')
+          if (m) m.setAttribute('content', '#ffffff')
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

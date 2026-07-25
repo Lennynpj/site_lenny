@@ -163,7 +163,12 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ profileId, password }),
     }),
-  me: () => request<ProfilePublic>('/auth/me'),
+  me: async () => {
+    // Le serveur peut renvoyer un jeton rafraîchi : on le range aussitôt.
+    const p = await request<ProfilePublic & { token?: string }>('/auth/me')
+    if (p.token) setToken(p.token)
+    return p
+  },
   // Face ID / WebAuthn
   faceIdSupported: () =>
     typeof window !== 'undefined' && !!window.PublicKeyCredential && window.isSecureContext,

@@ -3,9 +3,53 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-accent: #bef264; /* lime-300 — accent unique */
+  --color-accent: #bef264; /* lime-300 — accent de l'app Muscu */
   --font-sans: 'Outfit Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  /* ── Thème clair de l'app Comptes ──────────────────────────────
+     Noms en français pour ne pas entrer en collision avec la palette
+     Tailwind. Inertes pour les apps sombres, qui ne les utilisent pas. */
+  --color-papier: #ffffff;
+  --color-papier-2: #f4f6f8;
+  --color-papier-bleu: #f6f9ff;
+  --color-trait: #d0d5dd; /* séparateurs, décoratif */
+  --color-trait-champ: #8a929c; /* bordure de champ/tuile — 3,15:1 */
+  --color-trait-bleu: #d6e2fb;
+  --color-encre: #16191d; /* 17,6:1 */
+  --color-encre-2: #4a515a; /* 8,0:1 */
+  --color-encre-3: #6b7280; /* placeholder / désactivé uniquement */
+  --color-bleu: #1a56db; /* accent unique — 6,2:1 */
+  --color-bleu-fonce: #1445b0; /* texte accent sur fond teinté */
+  --color-bleu-clair: #eef3ff;
+  --color-vert: #0c6b44; /* argent qui rentre */
+  --color-vert-clair: #e7f5ee;
+  --color-vert-trait: #b7e0cb;
+  --color-rouge: #b42318; /* alerte / supprimer UNIQUEMENT */
+  --color-rouge-clair: #fdecea;
+  --color-rouge-trait: #f5c2bc;
+
+  /* Échelle typographique (base 18px, plancher 15px) */
+  --text-secondaire: 16px;
+  --text-secondaire--line-height: 22px;
+  --text-corps: 18px;
+  --text-corps--line-height: 26px;
+  --text-montant: 20px;
+  --text-montant--line-height: 26px;
+  --text-titre-section: 20px;
+  --text-titre-section--line-height: 26px;
+  --text-titre-page: 28px;
+  --text-titre-page--line-height: 34px;
+  --text-touche: 30px;
+  --text-touche--line-height: 30px;
+  --text-chiffre-saisie: 48px;
+  --text-chiffre-saisie--line-height: 52px;
+  --text-chiffre-heros: 56px;
+  --text-chiffre-heros--line-height: 60px;
+
+  --radius-carte: 16px;
+  --radius-champ: 14px;
+  --radius-feuille: 24px;
 }
 
 html {
@@ -84,4 +128,40 @@ input[type='number'] {
   background: linear-gradient(100deg, #18181b 40%, #27272a 50%, #18181b 60%);
   background-size: 200% 100%;
   animation: shimmer 1.6s linear infinite;
+}
+
+/* ── Thème clair (app Comptes) ────────────────────────────────────
+   Posé sur <html> par le script anti-flash de index.html et par le
+   useLayoutEffect de ComptesLayout. Spécificité (0,1,1) > html (0,0,1),
+   donc aucun !important nécessaire. */
+html.theme-clair {
+  background-color: #ffffff;
+  color-scheme: light;
+}
+html.theme-clair body {
+  color: #16191d;
+}
+html.theme-clair .skeleton {
+  background: linear-gradient(100deg, #f0f2f5 40%, #f7f8fa 50%, #f0f2f5 60%);
+}
+/* Apparition plus sobre et plus courte en thème clair */
+html.theme-clair .rise {
+  animation-duration: 0.2s;
+  animation-delay: calc(min(var(--i, 0), 3) * 40ms);
+}
+
+/* Focus clavier visible partout (usage PC) */
+html.theme-clair :focus-visible {
+  outline: 3px solid #1a56db;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
