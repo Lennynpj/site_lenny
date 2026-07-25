@@ -6,7 +6,7 @@ import type { Summary, Transaction } from '../../lib/comptes'
 import { echeance, finDuMois, jourRelatif, memeMois, messageErreur, moisLong, montant } from './lib/mots'
 import { Banniere, GrosBouton, LienAction, Liste, MessageErreur, Squelette, TitreSection } from './components/ui'
 import FeuilleDepense from './components/FeuilleDepense'
-import MiseEnRoute, { CLE_FORCER, CLE_IGNOREE } from './MiseEnRoute'
+import MiseEnRoute, { CLE_FORCER, etatMiseEnRoute } from './MiseEnRoute'
 
 type Contexte = { profil: { name: string } }
 
@@ -75,9 +75,10 @@ export default function AccueilPage() {
   const partiPct = Math.min(100, Math.max(0, (parti / total) * 100))
   const vide = resume.incomeMonthly === 0 && parti === 0
 
-  // Premier lancement (ou relance depuis Réglages) : on la guide pas à pas
-  // plutôt que de la laisser devant un écran vide.
-  if (assistantForce || (vide && localStorage.getItem(CLE_IGNOREE) !== '1')) {
+  // Premier lancement, reprise en cours de route, ou relance depuis Réglages :
+  // on la guide pas à pas plutôt que de la laisser devant un écran vide.
+  const etatAssistant = etatMiseEnRoute()
+  if (assistantForce || typeof etatAssistant === 'number' || (vide && etatAssistant !== 'faite')) {
     return (
       <MiseEnRoute
         prenom={profil.name}

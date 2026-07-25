@@ -57,6 +57,11 @@ export function jourDuMois(jour: number): string {
   return jour === 1 ? 'le 1er de chaque mois' : `le ${jour} de chaque mois`
 }
 
+/** Version courte, pour les lignes de liste où la place manque. */
+export function jourCourt(jour: number): string {
+  return jour === 1 ? 'le 1er du mois' : `le ${jour} du mois`
+}
+
 /** Combien de jours restent avant la fin du mois affiché. */
 export function finDuMois(d: Date = new Date()): { jour: number; restants: number } {
   const dernier = new Date(d.getFullYear(), d.getMonth() + 1, 0)
