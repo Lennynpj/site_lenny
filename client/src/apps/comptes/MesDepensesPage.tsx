@@ -35,9 +35,14 @@ export default function MesDepensesPage() {
 
   async function supprimer() {
     if (!aSupprimer?._id) return
-    await comptesApi.transactions.remove(aSupprimer._id)
-    setASupprimer(null)
-    charger()
+    try {
+      await comptesApi.transactions.remove(aSupprimer._id)
+      setASupprimer(null)
+      charger()
+    } catch (e) {
+      setASupprimer(null)
+      setErreur(messageErreur(e, 'Réessayer'))
+    }
   }
 
   const duMois = (toutes ?? []).filter((t) => memeMois(t.date, mois))
@@ -83,13 +88,28 @@ export default function MesDepensesPage() {
         </div>
       ) : (
         <>
-          {/* Résumé du mois affiché */}
-          <dl className="rise mt-5 grid grid-cols-3 gap-2.5" style={{ '--i': 2 } as React.CSSProperties}>
-            {[
-              { mot: 'Rentré', valeur: resume.incomeMonthly, ton: 'text-vert' },
-              { mot: 'Dépensé', valeur: totalDepenses, ton: 'text-encre' },
-              { mot: 'Factures', valeur: resume.subsMonthly, ton: 'text-encre' },
-            ].map((c) => (
+          {/* Résumé du mois affiché. Sur un mois passé on ne montre que les
+              chiffres réellement enregistrés : « Rentré » et « Factures »
+              viennent de la configuration d'aujourd'hui, pas de l'époque. */}
+          <dl
+            className={`rise mt-5 grid gap-2.5 ${moisCourant ? 'grid-cols-3' : 'grid-cols-2'}`}
+            style={{ '--i': 2 } as React.CSSProperties}
+          >
+            {(moisCourant
+              ? [
+                  { mot: 'Rentré', valeur: resume.incomeMonthly, ton: 'text-vert' },
+                  { mot: 'Dépensé', valeur: totalDepenses, ton: 'text-encre' },
+                  { mot: 'Factures', valeur: resume.subsMonthly, ton: 'text-encre' },
+                ]
+              : [
+                  { mot: 'Dépensé', valeur: totalDepenses, ton: 'text-encre' },
+                  {
+                    mot: 'Mis de côté',
+                    valeur: duMois.filter((t) => t.kind === 'epargne').reduce((s, t) => s + t.amount, 0),
+                    ton: 'text-bleu-fonce',
+                  },
+                ]
+            ).map((c) => (
               <div key={c.mot} className="rounded-carte border border-trait bg-papier px-3 py-3.5 text-center">
                 <dt className="text-secondaire text-encre-2">{c.mot}</dt>
                 <dd className={`mt-0.5 text-montant font-semibold ${c.ton}`}>{montant(c.valeur)}</dd>

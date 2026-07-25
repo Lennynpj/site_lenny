@@ -5,14 +5,18 @@ const MOIS = [
   'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre',
 ]
 
-/** 470 € — sans centimes quand le montant est rond (lisibilité). */
-export function montant(n: number, centimes = false): string {
+/**
+ * « 470 € » quand c'est rond, « 12,99 € » quand il y a des centimes.
+ * On n'arrondit JAMAIS en silence : sinon 12,99 s'affiche « 13 € » et les
+ * totaux affichés ne tombent plus juste.
+ */
+export function montant(n: number): string {
   const v = Math.abs(n ?? 0)
-  const arrondi = !centimes && Number.isInteger(v)
+  const centimes = Math.round(v * 100) % 100 !== 0
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR',
-    minimumFractionDigits: arrondi ? 0 : centimes ? 2 : 0,
+    minimumFractionDigits: centimes ? 2 : 0,
     maximumFractionDigits: centimes ? 2 : 0,
   }).format(v)
 }

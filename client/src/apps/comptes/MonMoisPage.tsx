@@ -17,7 +17,7 @@ import {
   TitreSection,
 } from './components/ui'
 import FeuilleConfirmation from './components/FeuilleConfirmation'
-import PaveNumerique, { afficheSaisie, versNombre } from './components/PaveNumerique'
+import ChampMontant from './components/ChampMontant'
 
 const JOURS_COURTS = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
 
@@ -311,49 +311,6 @@ const nouveauRevenu = (): Income => ({
   active: true,
 })
 
-/** Saisie d'un montant au pavé, dans un formulaire. */
-function ChampMontant({ valeur, onChange }: { valeur: number; onChange: (n: number) => void }) {
-  const [saisie, setSaisie] = useState(valeur ? String(valeur).replace('.', ',') : '')
-  const [ouvert, setOuvert] = useState(false)
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOuvert(true)}
-        className="flex h-14 w-full items-center justify-between rounded-champ border border-trait-champ bg-papier px-4 text-corps text-encre transition-colors duration-100 hover:bg-papier-2"
-      >
-        <span className={valeur ? 'font-semibold' : 'text-encre-3'}>
-          {valeur ? montant(valeur, true) : 'Appuie pour indiquer'}
-        </span>
-        <span className="text-secondaire text-bleu-fonce">Modifier</span>
-      </button>
-
-      <Feuille ouverte={ouvert} onFermer={() => setOuvert(false)} titre="Combien ?">
-        <div className="pb-2">
-          <p className="mb-4 text-center text-chiffre-saisie font-bold tracking-tight text-encre">
-            {afficheSaisie(saisie)}
-          </p>
-          <PaveNumerique
-            valeur={saisie}
-            preRempli={false}
-            onChange={(v) => {
-              setSaisie(v)
-              onChange(versNombre(v))
-            }}
-            onValider={() => setOuvert(false)}
-          />
-          <div className="mt-4">
-            <GrosBouton onClick={() => setOuvert(false)}>
-              <Check size={22} weight="bold" /> C'est bon
-            </GrosBouton>
-          </div>
-        </div>
-      </Feuille>
-    </>
-  )
-}
-
 function FormulaireFacture({
   initial,
   onFermer,
@@ -392,9 +349,7 @@ function FormulaireFacture({
           <Texte value={f.name} placeholder="Ex. : Électricité" onChange={(e) => set({ name: e.target.value })} />
         </Champ>
 
-        <Champ label="Combien ?">
-          <ChampMontant valeur={f.amount} onChange={(n) => set({ amount: n })} />
-        </Champ>
+        <ChampMontant label="Combien ?" valeur={f.amount} onChange={(n) => set({ amount: n })} />
 
         <Champ label="Le combien du mois ?" aide="Le jour où l'argent part de ton compte">
           <Texte
@@ -490,9 +445,7 @@ function FormulaireRevenu({
           <Texte value={r.label} placeholder="Ex. : Retraite" onChange={(e) => set({ label: e.target.value })} />
         </Champ>
 
-        <Champ label="Combien ?">
-          <ChampMontant valeur={r.amount} onChange={(n) => set({ amount: n })} />
-        </Champ>
+        <ChampMontant label="Combien ?" valeur={r.amount} onChange={(n) => set({ amount: n })} />
 
         <Champ label="Le combien du mois ?" aide="Le jour où l'argent arrive">
           <Texte

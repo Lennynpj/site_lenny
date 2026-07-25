@@ -177,7 +177,7 @@ function Connexion({
       <PaveNumerique
         valeur={code}
         preRempli={false}
-        sansVirgule
+        code
         onChange={(v) => setCode(v.replace(/\D/g, '').slice(0, 4))}
       />
     </div>
@@ -267,11 +267,13 @@ function Creation({
           <PaveNumerique
             valeur={code}
             preRempli={false}
-            sansVirgule
+            code
             onChange={(v) => {
               const c = v.replace(/\D/g, '').slice(0, 4)
+              // On ne referme qu'au passage à 4 chiffres : sinon chaque appui
+              // supplémentaire refermait la feuille sans rien changer.
+              if (c.length === 4 && code.length < 4) setTimeout(() => setOuvrirCode(false), 250)
               setCode(c)
-              if (c.length === 4) setTimeout(() => setOuvrirCode(false), 200)
             }}
           />
         </div>

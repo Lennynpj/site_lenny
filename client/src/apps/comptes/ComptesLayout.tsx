@@ -24,8 +24,11 @@ export default function ComptesLayout() {
     const meta = document.querySelector('meta[name="theme-color"]')
     html.classList.add('theme-clair')
     meta?.setAttribute('content', '#ffffff')
+    // Réapplique le réglage « texte plus grand » choisi dans Réglages.
+    if (localStorage.getItem('comptes_texte_grand') === '1') html.style.fontSize = '21px'
     return () => {
       html.classList.remove('theme-clair')
+      html.style.fontSize = ''
       meta?.setAttribute('content', '#09090b')
     }
   }, [])

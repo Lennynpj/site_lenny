@@ -15,6 +15,9 @@ services:
     environment:
       MONGODB_URI: mongodb://mongo:27017/site_lenny
       PORT: "3001"
+      # Les bornes de mois sont calculées en heure locale : sans ça, une dépense
+      # notée la nuit du 1er tombe dans le mois précédent.
+      TZ: Europe/Paris
       # Auth des profils Comptes. Mets un vrai secret dans un fichier .env à la
       # racine (AUTH_SECRET=...) — sinon les sessions ne sont pas sûres.
       AUTH_SECRET: ${AUTH_SECRET:-dev-secret-change-me}

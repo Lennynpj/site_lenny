@@ -12,7 +12,9 @@ export default function AccueilPage() {
   const [dernieres, setDernieres] = useState<Transaction[]>([])
   const [erreur, setErreur] = useState<string | null>(null)
   const [feuille, setFeuille] = useState<null | 'depense' | 'revenu'>(null)
-  const [annulable, setAnnulable] = useState<{ id?: string; libelle: string; montant: number } | null>(null)
+  const [annulable, setAnnulable] = useState<
+    { id?: string; libelle: string; montant: number; sens?: 'depense' | 'revenu' } | null
+  >(null)
   const timer = useRef<number | null>(null)
 
   const charger = useCallback(() => {
@@ -29,7 +31,7 @@ export default function AccueilPage() {
   useEffect(() => charger(), [charger])
   useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current) }, [])
 
-  function ajoutee(info: { id?: string; libelle: string; montant: number }) {
+  function ajoutee(info: { id?: string; libelle: string; montant: number; sens?: 'depense' | 'revenu' }) {
     charger()
     setAnnulable(info)
     if (timer.current) window.clearTimeout(timer.current)
@@ -38,9 +40,14 @@ export default function AccueilPage() {
 
   async function annuler() {
     if (!annulable?.id) return
-    await comptesApi.transactions.remove(annulable.id)
-    setAnnulable(null)
-    charger()
+    try {
+      await comptesApi.transactions.remove(annulable.id)
+      setAnnulable(null)
+      charger()
+    } catch (e) {
+      // Sans ça, l'annulation échouée passait inaperçue.
+      setErreur(messageErreur(e, 'Annuler'))
+    }
   }
 
   if (erreur && !resume) return <MessageErreur texte={erreur} onReessayer={charger} />
@@ -54,7 +61,9 @@ export default function AccueilPage() {
 
   const { jour, restants } = finDuMois()
   const positif = resume.resteAVivre >= 0
-  const parti = resume.subsMonthly + resume.variableThisMonth
+  // L'épargne doit être comptée ici, sinon « Rentré − Parti » ne redonne pas
+  // le montant affiché en grand.
+  const parti = resume.subsMonthly + resume.variableThisMonth + resume.epargneThisMonth
   const total = resume.incomeMonthly || 1
   const partiPct = Math.min(100, Math.max(0, (parti / total) * 100))
   const vide = resume.incomeMonthly === 0 && parti === 0
@@ -65,8 +74,10 @@ export default function AccueilPage() {
         <div className="mb-4">
           <Banniere ton="vert">
             <span className="flex-1 text-corps">
-              <span className="font-semibold">Dépense enregistrée</span> — {annulable.libelle},{' '}
-              {montant(annulable.montant)}
+              <span className="font-semibold">
+                {annulable.sens === 'revenu' ? 'Argent reçu enregistré' : 'Dépense enregistrée'}
+              </span>{' '}
+              — {annulable.libelle}, {montant(annulable.montant)}
             </span>
             <button
               onClick={annuler}
@@ -132,8 +143,9 @@ export default function AccueilPage() {
                 <dd className="text-montant font-semibold text-encre">{montant(parti)}</dd>
               </div>
               <p className="pl-6 text-secondaire text-encre-2">
-                dont {montant(resume.subsMonthly)} de factures et {montant(resume.variableThisMonth)} de
+                dont {montant(resume.subsMonthly)} de factures, {montant(resume.variableThisMonth)} de
                 dépenses
+                {resume.epargneThisMonth > 0 && <> et {montant(resume.epargneThisMonth)} mis de côté</>}
               </p>
             </dl>
 

@@ -18,7 +18,7 @@ import {
   TitreSection,
 } from './components/ui'
 import FeuilleConfirmation from './components/FeuilleConfirmation'
-import PaveNumerique, { afficheSaisie, versNombre } from './components/PaveNumerique'
+import ChampMontant from './components/ChampMontant'
 
 type Contexte = { profil: ProfilePublic; onQuitter: () => void }
 
@@ -42,13 +42,12 @@ export default function ReglagesPage() {
   }, [])
   useEffect(() => charger(), [charger])
 
-  // Taille du texte : toute la mise en page est en rem sauf les cibles tactiles.
+  // Taille du texte : on n'annule PAS en quittant la page, sinon le réglage
+  // ne durait que le temps d'être sur Réglages. ComptesLayout le réapplique
+  // à chaque ouverture de l'app.
   useEffect(() => {
     document.documentElement.style.fontSize = texteGrand ? '21px' : ''
     localStorage.setItem(CLE_TAILLE, texteGrand ? '1' : '0')
-    return () => {
-      document.documentElement.style.fontSize = ''
-    }
   }, [texteGrand])
 
   async function activerFaceId() {
@@ -217,10 +216,6 @@ function FormulaireModele({
   onSupprimer: (m: ExpenseTemplate) => void
 }) {
   const [m, setM] = useState<ExpenseTemplate>(initial)
-  const [saisie, setSaisie] = useState(
-    initial.defaultAmount ? String(initial.defaultAmount).replace('.', ',') : ''
-  )
-  const [ouvrirMontant, setOuvrirMontant] = useState(false)
   const [enCours, setEnCours] = useState(false)
   const [erreur, setErreur] = useState<string | null>(null)
 
@@ -228,7 +223,7 @@ function FormulaireModele({
     if (!m.label.trim()) return
     setEnCours(true)
     setErreur(null)
-    const corps = { ...m, defaultAmount: versNombre(saisie) }
+    const corps = { ...m }
     try {
       if (m._id) await comptesApi.templates.update(m._id, corps)
       else await comptesApi.templates.create(corps)
@@ -251,18 +246,12 @@ function FormulaireModele({
           />
         </Champ>
 
-        <Champ label="Montant habituel" aide="Tu pourras toujours le changer au moment de noter">
-          <button
-            type="button"
-            onClick={() => setOuvrirMontant(true)}
-            className="flex h-14 w-full items-center justify-between rounded-champ border border-trait-champ bg-papier px-4 text-corps text-encre transition-colors duration-100 hover:bg-papier-2"
-          >
-            <span className={saisie ? 'font-semibold' : 'text-encre-3'}>
-              {saisie ? `${saisie} €` : 'Appuie pour indiquer'}
-            </span>
-            <span className="text-secondaire text-bleu-fonce">Modifier</span>
-          </button>
-        </Champ>
+        <ChampMontant
+          label="Montant habituel"
+          aide="Tu pourras toujours le changer au moment de noter"
+          valeur={m.defaultAmount || 0}
+          onChange={(n) => setM((p) => ({ ...p, defaultAmount: n }))}
+        />
 
         {erreur && <MessageErreur texte={erreur} />}
 
@@ -280,24 +269,6 @@ function FormulaireModele({
         )}
       </div>
 
-      <Feuille ouverte={ouvrirMontant} onFermer={() => setOuvrirMontant(false)} titre="Combien ?">
-        <div className="pb-2">
-          <p className="mb-4 text-center text-chiffre-saisie font-bold tracking-tight text-encre">
-            {afficheSaisie(saisie)}
-          </p>
-          <PaveNumerique
-            valeur={saisie}
-            preRempli={false}
-            onChange={setSaisie}
-            onValider={() => setOuvrirMontant(false)}
-          />
-          <div className="mt-4">
-            <GrosBouton onClick={() => setOuvrirMontant(false)}>
-              <Check size={22} weight="bold" /> C'est bon
-            </GrosBouton>
-          </div>
-        </div>
-      </Feuille>
     </Feuille>
   )
 }

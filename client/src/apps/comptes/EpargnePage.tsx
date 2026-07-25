@@ -17,6 +17,7 @@ import {
 } from './components/ui'
 import FeuilleConfirmation from './components/FeuilleConfirmation'
 import PaveNumerique, { afficheSaisie, versNombre } from './components/PaveNumerique'
+import ChampMontant from './components/ChampMontant'
 import Prevision from './components/Prevision'
 
 /* Épargne volontairement simple : un nom, un montant. Pas de type de placement,
@@ -281,12 +282,6 @@ function FormulaireEnveloppe({
   onSupprimer: (a: Asset) => void
 }) {
   const [a, setA] = useState<Asset>(initial)
-  const [saisie, setSaisie] = useState(a.balance ? String(a.balance).replace('.', ',') : '')
-  const [versement, setVersement] = useState(
-    a.monthlyContribution ? String(a.monthlyContribution).replace('.', ',') : ''
-  )
-  const [ouvrirMontant, setOuvrirMontant] = useState(false)
-  const [ouvrirVersement, setOuvrirVersement] = useState(false)
   const [enCours, setEnCours] = useState(false)
   const [erreur, setErreur] = useState<string | null>(null)
 
@@ -294,11 +289,7 @@ function FormulaireEnveloppe({
     if (!a.name.trim()) return
     setEnCours(true)
     setErreur(null)
-    const corps = {
-      ...a,
-      balance: versNombre(saisie),
-      monthlyContribution: versNombre(versement),
-    }
+    const corps = { ...a }
     try {
       if (a._id) await comptesApi.assets.update(a._id, corps)
       else await comptesApi.assets.create(corps)
@@ -321,32 +312,21 @@ function FormulaireEnveloppe({
           />
         </Champ>
 
-        <Champ label="Combien il y a dedans ?">
-          <button
-            type="button"
-            onClick={() => setOuvrirMontant(true)}
-            className="flex h-14 w-full items-center justify-between rounded-champ border border-trait-champ bg-papier px-4 text-corps text-encre transition-colors duration-100 hover:bg-papier-2"
-          >
-            <span className={saisie ? 'font-semibold' : 'text-encre-3'}>
-              {saisie ? `${saisie} €` : 'Appuie pour indiquer'}
-            </span>
-            <span className="text-secondaire text-bleu-fonce">Modifier</span>
-          </button>
-        </Champ>
+        <ChampMontant
+          label="Combien il y a dedans ?"
+          valeur={a.balance || 0}
+          onChange={(n) => setA((p) => ({ ...p, balance: n }))}
+        />
 
         {/* Alimente la prévision « si je continue comme ça » */}
-        <Champ label="Je mets de côté chaque mois" aide="Laisse vide si ça change tous les mois">
-          <button
-            type="button"
-            onClick={() => setOuvrirVersement(true)}
-            className="flex h-14 w-full items-center justify-between rounded-champ border border-trait-champ bg-papier px-4 text-corps text-encre transition-colors duration-100 hover:bg-papier-2"
-          >
-            <span className={versement ? 'font-semibold' : 'text-encre-3'}>
-              {versement ? `${versement} €` : 'Rien pour l’instant'}
-            </span>
-            <span className="text-secondaire text-bleu-fonce">Modifier</span>
-          </button>
-        </Champ>
+        <ChampMontant
+          label="Je mets de côté chaque mois"
+          aide="Laisse vide si ça change tous les mois"
+          valeur={a.monthlyContribution || 0}
+          onChange={(n) => setA((p) => ({ ...p, monthlyContribution: n }))}
+          vide="Rien pour l'instant"
+          titreFeuille="Combien chaque mois ?"
+        />
 
         <Champ label="Ça me rapporte par an" aide="Par exemple 3 % pour un Livret A. Laisse 0 si tu ne sais pas.">
           <Texte
@@ -376,47 +356,6 @@ function FormulaireEnveloppe({
         )}
       </div>
 
-      <Feuille ouverte={ouvrirMontant} onFermer={() => setOuvrirMontant(false)} titre="Combien ?">
-        <div className="pb-2">
-          <p className="mb-4 text-center text-chiffre-saisie font-bold tracking-tight text-encre">
-            {afficheSaisie(saisie)}
-          </p>
-          <PaveNumerique
-            valeur={saisie}
-            preRempli={false}
-            onChange={setSaisie}
-            onValider={() => setOuvrirMontant(false)}
-          />
-          <div className="mt-4">
-            <GrosBouton onClick={() => setOuvrirMontant(false)}>
-              <Check size={22} weight="bold" /> C'est bon
-            </GrosBouton>
-          </div>
-        </div>
-      </Feuille>
-
-      <Feuille
-        ouverte={ouvrirVersement}
-        onFermer={() => setOuvrirVersement(false)}
-        titre="Combien chaque mois ?"
-      >
-        <div className="pb-2">
-          <p className="mb-4 text-center text-chiffre-saisie font-bold tracking-tight text-encre">
-            {afficheSaisie(versement)}
-          </p>
-          <PaveNumerique
-            valeur={versement}
-            preRempli={false}
-            onChange={setVersement}
-            onValider={() => setOuvrirVersement(false)}
-          />
-          <div className="mt-4">
-            <GrosBouton onClick={() => setOuvrirVersement(false)}>
-              <Check size={22} weight="bold" /> C'est bon
-            </GrosBouton>
-          </div>
-        </div>
-      </Feuille>
     </Feuille>
   )
 }

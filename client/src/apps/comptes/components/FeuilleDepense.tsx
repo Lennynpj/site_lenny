@@ -19,7 +19,12 @@ export default function FeuilleDepense({
 }: {
   ouverte: boolean
   onFermer: () => void
-  onAjoutee: (info: { id?: string; libelle: string; montant: number }) => void
+  onAjoutee: (info: {
+    id?: string
+    libelle: string
+    montant: number
+    sens?: 'depense' | 'revenu'
+  }) => void
   sens?: 'depense' | 'revenu'
 }) {
   const [modeles, setModeles] = useState<ExpenseTemplate[]>([])
@@ -38,15 +43,32 @@ export default function FeuilleDepense({
 
   useEffect(() => {
     if (!ouverte) return
-    setEtape('choix')
     setLibelle('')
-    setSaisieLibre(false)
     setSaisie('')
-    setPreRempli(true)
+    setPreRempli(false)
     setQuand(new Date())
     setChoisirDate(false)
     setErreur(null)
-    if (sens === 'depense') comptesApi.templates.list().then(setModeles).catch(() => setModeles([]))
+    setCategorie('autre')
+
+    if (sens === 'revenu') {
+      // Une rentrée d'argent n'a pas de raccourcis : on va droit au montant.
+      // (Afficher les boutons de dépense enregistrait des revenus « Courses ».)
+      setModeles([])
+      setSaisieLibre(true)
+      setEtape('montant')
+      return
+    }
+
+    setSaisieLibre(false)
+    setEtape('choix')
+    comptesApi.templates
+      .list()
+      .then(setModeles)
+      .catch(() => {
+        setModeles([])
+        setErreur("Je n'ai pas pu charger tes boutons. Tu peux quand même noter la dépense avec « Autre chose ».")
+      })
   }, [ouverte, sens])
 
   function choisirModele(m: ExpenseTemplate) {
@@ -69,7 +91,9 @@ export default function FeuilleDepense({
 
   async function enregistrer() {
     const valeur = versNombre(saisie)
-    if (!libelle.trim() || valeur <= 0) return
+    // Le garde sur enCours évite le double enregistrement : la touche Entrée
+    // du pavé contourne l'état « disabled » du bouton.
+    if (enCours || !libelle.trim() || valeur <= 0) return
     setEnCours(true)
     setErreur(null)
     try {
@@ -80,7 +104,7 @@ export default function FeuilleDepense({
         category: categorie,
         date: quand.toISOString(),
       })
-      onAjoutee({ id: tx._id, libelle: libelle.trim(), montant: valeur })
+      onAjoutee({ id: tx._id, libelle: libelle.trim(), montant: valeur, sens })
       onFermer()
     } catch (e) {
       setErreur(messageErreur(e, "C'est noté"))

@@ -20,7 +20,7 @@ export default function PaveNumerique({
   onChange,
   preRempli,
   onValider,
-  sansVirgule = false,
+  code = false,
 }: {
   /** Chaîne, pas un nombre : « 12, » est un état intermédiaire valide. */
   valeur: string
@@ -28,20 +28,22 @@ export default function PaveNumerique({
   /** true tant que l'utilisatrice n'a pas touché au montant proposé. */
   preRempli: boolean
   onValider?: () => void
-  /** Saisie d'un code : la virgule n'a pas lieu d'être affichée. */
-  sansVirgule?: boolean
+  /** Saisie d'un code (PIN) : pas de virgule, et un zéro en tête est permis. */
+  code?: boolean
 }) {
   const [presse, setPresse] = useState<string | null>(null)
 
-  const decimales = valeur.split(',')[1]?.length ?? 0
-  const virguleBloquee = valeur.includes(',') || valeur === ''
-  const entiers = valeur.split(',')[0].length
+  /* Base de frappe : quand un montant est pré-rempli, la première touche le
+     remplace, donc tout se calcule comme si le champ était vide. L'état des
+     touches DOIT utiliser la même base, sinon un montant à centimes (49,99)
+     désactive les dix chiffres et plus rien ne réagit. */
+  const base = preRempli ? '' : valeur
+  const decimales = base.split(',')[1]?.length ?? 0
+  const virguleBloquee = base.includes(',') || base === ''
+  const entiers = base.split(',')[0].length
 
   const taper = useCallback(
     (touche: string) => {
-      // La première frappe remplace intégralement le montant proposé.
-      const base = preRempli ? '' : valeur
-
       if (touche === 'effacer') {
         onChange(base.slice(0, -1))
         return
@@ -53,13 +55,15 @@ export default function PaveNumerique({
       }
       if ((base.split(',')[1]?.length ?? 0) >= 2) return // max 2 décimales
       if (!base.includes(',') && base.split(',')[0].length >= 6) return // max 6 entiers
-      if (base === '0') {
-        onChange(touche) // évite « 05 »
+      // Un montant ne commence pas par « 05 » — mais un code, si : sans cette
+      // exception, le code « 0512 » perd son zéro et ne fait jamais 4 chiffres.
+      if (base === '0' && !code) {
+        onChange(touche)
         return
       }
       onChange(base + touche)
     },
-    [valeur, preRempli, onChange]
+    [base, code, onChange]
   )
 
   // Clavier physique (usage PC)
@@ -93,7 +97,7 @@ export default function PaveNumerique({
     return () => window.removeEventListener('keydown', onKey)
   }, [taper, onValider])
 
-  const touches = ['1', '2', '3', '4', '5', '6', '7', '8', '9', sansVirgule ? '' : ',', '0', 'effacer']
+  const touches = ['1', '2', '3', '4', '5', '6', '7', '8', '9', code ? '' : ',', '0', 'effacer']
 
   return (
     <div className="grid grid-cols-3 gap-2.5">

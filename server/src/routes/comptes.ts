@@ -118,7 +118,11 @@ router.get('/summary', async (req: AuthedRequest, res) => {
     .map(([category, amount]) => ({ category, amount: Math.round(amount * 100) / 100 }))
     .sort((a, b) => b.amount - a.amount)
 
+  // Seules les factures réellement prélevées ce mois-ci sont annoncées comme
+  // « bientôt ». Une facture annuelle n'a pas de mois enregistré : l'afficher
+  // chaque mois à son montant entier ferait croire à un prélèvement imminent.
   const nextDebits = subs
+    .filter((x) => x.frequency !== 'annuel')
     .map((x) => {
       const due = nextDueDate(x.dayOfMonth)
       return { name: x.name, amount: x.amount, category: x.category, date: due, daysUntil: daysUntil(due) }

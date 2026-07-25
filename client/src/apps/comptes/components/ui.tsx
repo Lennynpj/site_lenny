@@ -1,6 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useId } from 'react'
+import { createPortal } from 'react-dom'
 import type { ReactNode } from 'react'
 import { X } from '@phosphor-icons/react'
+
+/* Pile des feuilles ouvertes : la touche Échap ne doit fermer que celle du
+   dessus, pas toutes d'un coup. */
+const pileFeuilles: string[] = []
 
 /* Design system clair de l'app Comptes.
    Règles : cibles ≥ 56px, texte ≥ 15px, aucune ombre (sauf feuille),
@@ -22,15 +27,31 @@ export function Feuille({
   enTete?: ReactNode
   children: ReactNode
 }) {
+  const id = useId()
+
   useEffect(() => {
     if (!ouverte) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onFermer()
+    pileFeuilles.push(id)
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (pileFeuilles.at(-1) !== id) return // seule la feuille du dessus réagit
+      onFermer()
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [ouverte, onFermer])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      const i = pileFeuilles.lastIndexOf(id)
+      if (i !== -1) pileFeuilles.splice(i, 1)
+    }
+  }, [ouverte, onFermer, id])
 
   if (!ouverte) return null
-  return (
+
+  /* Portail obligatoire : une feuille imbriquée rendue dans le DOM de sa
+     parente hérite de son repère de positionnement (la parente est animée en
+     translateY, ce qui crée un bloc conteneur), et `fixed inset-0` ne couvre
+     alors plus l'écran mais seulement la feuille parente. */
+  return createPortal(
     <div className="fixed inset-0 z-40 flex items-end justify-center" role="dialog" aria-modal="true">
       <button
         aria-label="Fermer"
@@ -58,7 +79,8 @@ export function Feuille({
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
 
