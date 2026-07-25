@@ -25,6 +25,9 @@ export default function FeuilleDepense({
   const [modeles, setModeles] = useState<ExpenseTemplate[]>([])
   const [etape, setEtape] = useState<Etape>('choix')
   const [libelle, setLibelle] = useState('')
+  // On retient qu'on est passé par « Autre chose » : sans ça, le champ du nom
+  // se démonterait dès la première lettre tapée (et perdrait le focus).
+  const [saisieLibre, setSaisieLibre] = useState(false)
   const [categorie, setCategorie] = useState('autre')
   const [saisie, setSaisie] = useState('')
   const [preRempli, setPreRempli] = useState(true)
@@ -37,6 +40,7 @@ export default function FeuilleDepense({
     if (!ouverte) return
     setEtape('choix')
     setLibelle('')
+    setSaisieLibre(false)
     setSaisie('')
     setPreRempli(true)
     setQuand(new Date())
@@ -47,6 +51,7 @@ export default function FeuilleDepense({
 
   function choisirModele(m: ExpenseTemplate) {
     setLibelle(m.label)
+    setSaisieLibre(false)
     setCategorie(m.category || 'autre')
     setSaisie(m.defaultAmount ? String(m.defaultAmount).replace('.', ',') : '')
     setPreRempli(!!m.defaultAmount)
@@ -55,6 +60,7 @@ export default function FeuilleDepense({
 
   function choisirAutre() {
     setLibelle('')
+    setSaisieLibre(true)
     setCategorie('autre')
     setSaisie('')
     setPreRempli(false)
@@ -149,14 +155,13 @@ export default function FeuilleDepense({
             </p>
           </div>
 
-          {/* Libellé si « Autre chose » */}
-          {!libelle && (
+          {/* Libellé quand on est passé par « Autre chose » */}
+          {saisieLibre && (
             <div className="mt-4">
               <Champ label="C'était quoi ?">
                 <Texte
                   value={libelle}
                   placeholder="Ex. : Coiffeur"
-                  autoFocus
                   onChange={(e) => setLibelle(e.target.value)}
                 />
               </Champ>

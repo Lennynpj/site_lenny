@@ -17,6 +17,7 @@ import {
 } from './components/ui'
 import FeuilleConfirmation from './components/FeuilleConfirmation'
 import PaveNumerique, { afficheSaisie, versNombre } from './components/PaveNumerique'
+import Prevision from './components/Prevision'
 
 /* Épargne volontairement simple : un nom, un montant. Pas de type de placement,
    pas de taux de rendement, pas de versement automatique. */
@@ -124,8 +125,15 @@ export default function EpargnePage() {
         )}
       </section>
 
-      {mouvements.length > 0 && (
+      {epargnes.length > 0 && (
         <section className="rise mt-7" style={{ '--i': 3 } as React.CSSProperties}>
+          <TitreSection>Si je continue comme ça</TitreSection>
+          <Prevision assets={epargnes} />
+        </section>
+      )}
+
+      {mouvements.length > 0 && (
+        <section className="rise mt-7" style={{ '--i': 4 } as React.CSSProperties}>
           <TitreSection>Ce que j'ai mis de côté récemment</TitreSection>
           <Liste>
             {mouvements.map((m) => (
@@ -274,7 +282,11 @@ function FormulaireEnveloppe({
 }) {
   const [a, setA] = useState<Asset>(initial)
   const [saisie, setSaisie] = useState(a.balance ? String(a.balance).replace('.', ',') : '')
+  const [versement, setVersement] = useState(
+    a.monthlyContribution ? String(a.monthlyContribution).replace('.', ',') : ''
+  )
   const [ouvrirMontant, setOuvrirMontant] = useState(false)
+  const [ouvrirVersement, setOuvrirVersement] = useState(false)
   const [enCours, setEnCours] = useState(false)
   const [erreur, setErreur] = useState<string | null>(null)
 
@@ -282,7 +294,11 @@ function FormulaireEnveloppe({
     if (!a.name.trim()) return
     setEnCours(true)
     setErreur(null)
-    const corps = { ...a, balance: versNombre(saisie) }
+    const corps = {
+      ...a,
+      balance: versNombre(saisie),
+      monthlyContribution: versNombre(versement),
+    }
     try {
       if (a._id) await comptesApi.assets.update(a._id, corps)
       else await comptesApi.assets.create(corps)
@@ -318,6 +334,32 @@ function FormulaireEnveloppe({
           </button>
         </Champ>
 
+        {/* Alimente la prévision « si je continue comme ça » */}
+        <Champ label="Je mets de côté chaque mois" aide="Laisse vide si ça change tous les mois">
+          <button
+            type="button"
+            onClick={() => setOuvrirVersement(true)}
+            className="flex h-14 w-full items-center justify-between rounded-champ border border-trait-champ bg-papier px-4 text-corps text-encre transition-colors duration-100 hover:bg-papier-2"
+          >
+            <span className={versement ? 'font-semibold' : 'text-encre-3'}>
+              {versement ? `${versement} €` : 'Rien pour l’instant'}
+            </span>
+            <span className="text-secondaire text-bleu-fonce">Modifier</span>
+          </button>
+        </Champ>
+
+        <Champ label="Ça me rapporte par an" aide="Par exemple 3 % pour un Livret A. Laisse 0 si tu ne sais pas.">
+          <Texte
+            type="number"
+            inputMode="decimal"
+            min={0}
+            max={20}
+            step={0.5}
+            value={a.annualRate ?? 0}
+            onChange={(e) => setA((p) => ({ ...p, annualRate: Number(e.target.value) || 0 }))}
+          />
+        </Champ>
+
         {erreur && <MessageErreur texte={erreur} />}
 
         <GrosBouton onClick={enregistrer} disabled={enCours || !a.name.trim()}>
@@ -347,6 +389,29 @@ function FormulaireEnveloppe({
           />
           <div className="mt-4">
             <GrosBouton onClick={() => setOuvrirMontant(false)}>
+              <Check size={22} weight="bold" /> C'est bon
+            </GrosBouton>
+          </div>
+        </div>
+      </Feuille>
+
+      <Feuille
+        ouverte={ouvrirVersement}
+        onFermer={() => setOuvrirVersement(false)}
+        titre="Combien chaque mois ?"
+      >
+        <div className="pb-2">
+          <p className="mb-4 text-center text-chiffre-saisie font-bold tracking-tight text-encre">
+            {afficheSaisie(versement)}
+          </p>
+          <PaveNumerique
+            valeur={versement}
+            preRempli={false}
+            onChange={setVersement}
+            onValider={() => setOuvrirVersement(false)}
+          />
+          <div className="mt-4">
+            <GrosBouton onClick={() => setOuvrirVersement(false)}>
               <Check size={22} weight="bold" /> C'est bon
             </GrosBouton>
           </div>

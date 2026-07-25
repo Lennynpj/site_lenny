@@ -65,6 +65,15 @@ export default function PaveNumerique({
   // Clavier physique (usage PC)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Ne jamais voler les touches d'un champ de saisie : sans ça, impossible
+      // d'écrire un chiffre ni d'effacer dans « C'était quoi ? ».
+      const cible = e.target as HTMLElement | null
+      if (
+        cible &&
+        (cible.tagName === 'INPUT' || cible.tagName === 'TEXTAREA' || cible.isContentEditable)
+      )
+        return
+
       let touche: string | null = null
       if (/^[0-9]$/.test(e.key)) touche = e.key
       else if (e.key === ',' || e.key === '.') touche = ','
