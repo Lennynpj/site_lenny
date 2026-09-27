@@ -19,6 +19,8 @@ interface Pose {
   cheville2?: Point
   halteres?: boolean
   chargeHanches?: boolean
+  /** Chaussette sous le talon (leg curl glissé). */
+  chaussette?: boolean
   appui?: { x: number; y: number; l: number; h: number }
 }
 
@@ -44,8 +46,8 @@ const MOUVEMENTS: Record<string, Mouvement> = {
       coude: [62, 56], main: [64, 72], halteres: true,
     },
     b: {
-      tete: [62, 26], epaule: [60, 44], hanche: [58, 68], genou: [78, 80], cheville: [80, 100],
-      genou2: [38, 90], cheville2: [28, 100], coude: [64, 60], main: [64, 76], halteres: true,
+      tete: [62, 28], epaule: [60, 46], hanche: [56, 68], genou: [78, 82], cheville: [78, 102],
+      genou2: [34, 94], cheville2: [22, 102], coude: [62, 62], main: [62, 78], halteres: true,
     },
   },
   charniere: {
@@ -110,10 +112,12 @@ const MOUVEMENTS: Record<string, Mouvement> = {
   },
   legcurl: {
     a: {
-      tete: [22, 96], epaule: [38, 94], hanche: [72, 76], genou: [88, 86], cheville: [102, 98],
+      tete: [20, 98], epaule: [38, 100], hanche: [66, 84], genou: [88, 92], cheville: [108, 100],
+      chaussette: true,
     },
     b: {
-      tete: [22, 96], epaule: [38, 94], hanche: [72, 72], genou: [58, 88], cheville: [48, 100],
+      tete: [20, 98], epaule: [38, 100], hanche: [58, 70], genou: [88, 62], cheville: [78, 100],
+      chaussette: true,
     },
   },
   gainage: {
@@ -138,12 +142,12 @@ const MOUVEMENTS: Record<string, Mouvement> = {
   },
   climbers: {
     a: {
-      tete: [26, 62], epaule: [42, 67], hanche: [78, 76], genou: [96, 84], cheville: [106, 94],
-      genou2: [56, 84], cheville2: [64, 98], coude: [40, 94], main: [34, 96],
+      tete: [20, 52], epaule: [36, 58], hanche: [76, 74], genou: [96, 86], cheville: [112, 100],
+      genou2: [58, 96], cheville2: [78, 102], coude: [30, 78], main: [26, 100],
     },
     b: {
-      tete: [26, 62], epaule: [42, 67], hanche: [78, 76], genou: [56, 84], cheville: [64, 98],
-      genou2: [96, 84], cheville2: [106, 94], coude: [40, 94], main: [34, 96],
+      tete: [20, 52], epaule: [36, 58], hanche: [76, 74], genou: [58, 96], cheville: [78, 102],
+      genou2: [96, 86], cheville2: [112, 100], coude: [30, 78], main: [26, 100],
     },
   },
   crunch: {
@@ -169,12 +173,13 @@ function Bonhomme({ pose, pale = false }: { pose: Pose; pale?: boolean }) {
       {pose.appui && (
         <rect
           x={pose.appui.x} y={pose.appui.y} width={pose.appui.l} height={pose.appui.h} rx="6"
-          fill="var(--color-petale)" stroke="var(--color-trait-lysa)" strokeWidth="3"
+          fill="var(--color-trait-lysa)" stroke="var(--color-encre-lysa-2)" strokeWidth="2.5"
+          opacity="0.55"
         />
       )}
       <g stroke={trait} strokeWidth="6.5">
         {pose.genou2 && pose.cheville2 && (
-          <g stroke="var(--color-trait-lysa)">
+          <g opacity="0.42">
             <line {...l(pose.hanche, pose.genou2)} />
             <line {...l(pose.genou2, pose.cheville2)} />
           </g>
@@ -191,6 +196,12 @@ function Bonhomme({ pose, pale = false }: { pose: Pose; pale?: boolean }) {
       {pose.halteres && pose.main && (
         <rect
           x={pose.main[0] - 9} y={pose.main[1] - 4.5} width="18" height="9" rx="4.5"
+          fill={pale ? 'var(--color-trait-lysa)' : 'var(--color-encre-lysa)'}
+        />
+      )}
+      {pose.chaussette && (
+        <ellipse
+          cx={pose.cheville[0]} cy={pose.cheville[1] + 3} rx="10" ry="5"
           fill={pale ? 'var(--color-trait-lysa)' : 'var(--color-encre-lysa)'}
         />
       )}
@@ -248,19 +259,11 @@ export function PictoAnime({
   return (
     <svg viewBox="0 0 120 120" className={className} role="img" aria-hidden="true">
       <Sol />
-      {!statique && (
-        <g opacity="0.16">
-          <Bonhomme pose={m.b} pale />
-        </g>
-      )}
       <Bonhomme pose={m.a} />
       {!statique && (
         <g className="photo-alterne">
           <rect x="0" y="0" width="120" height="120" fill={fond} />
           <Sol />
-          <g opacity="0.16">
-            <Bonhomme pose={m.a} pale />
-          </g>
           <Bonhomme pose={m.b} />
         </g>
       )}
