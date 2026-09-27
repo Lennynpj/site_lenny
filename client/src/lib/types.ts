@@ -4,6 +4,8 @@ export interface MachineEquivalent {
   imagePath?: string
 }
 
+export type Unite = 'reps' | 'secondes' | 'parJambe' | 'parBras' | 'parCote' | 'max'
+
 export interface Exercise {
   _id: string
   slug: string
@@ -13,6 +15,15 @@ export interface Exercise {
   imagePath?: string
   setup?: string
   machineEquivalent?: MachineEquivalent | null
+  /** Deux photos départ/arrivée, alternées pour faire un gif. */
+  photos?: string[]
+  /** Démo filmée (identifiant YouTube). */
+  videoId?: string
+  /** Famille de mouvement : choisit le dessin affiché sur la carte. */
+  pattern?: string
+  /** 2 ou 3 repères en français courant. */
+  howTo?: string[]
+  unit?: Unite
 }
 
 export interface ProgramItem {
@@ -39,6 +50,7 @@ export interface Program {
   _id?: string
   name: string
   days: ProgramDay[]
+  owner?: 'lenny' | 'lysa'
 }
 
 export interface SetEntry {

@@ -5,6 +5,10 @@ import TodayPage from './apps/muscu/TodayPage'
 import ProgramPage from './apps/muscu/ProgramPage'
 import HistoryPage from './apps/muscu/HistoryPage'
 import ProgressPage from './apps/muscu/ProgressPage'
+import LysaLayout from './apps/lysa/LysaLayout'
+import SeancePage from './apps/lysa/SeancePage'
+import LysaProgrammePage from './apps/lysa/ProgrammePage'
+import ProgresPage from './apps/lysa/ProgresPage'
 import ComptesLayout from './apps/comptes/ComptesLayout'
 import AccueilPage from './apps/comptes/AccueilPage'
 import MonMoisPage from './apps/comptes/MonMoisPage'
@@ -21,6 +25,11 @@ export default function App() {
         <Route path="programme" element={<ProgramPage />} />
         <Route path="historique" element={<HistoryPage />} />
         <Route path="progression" element={<ProgressPage />} />
+      </Route>
+      <Route path="/lysa" element={<LysaLayout />}>
+        <Route index element={<SeancePage />} />
+        <Route path="programme" element={<LysaProgrammePage />} />
+        <Route path="progres" element={<ProgresPage />} />
       </Route>
       <Route path="/comptes" element={<ComptesLayout />}>
         <Route index element={<AccueilPage />} />

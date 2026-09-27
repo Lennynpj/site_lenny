@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AirplaneTilt, ArrowRight, Barbell, Wallet } from '@phosphor-icons/react'
+import { AirplaneTilt, ArrowRight, Barbell, HeartStraight, Wallet } from '@phosphor-icons/react'
 import { api, WEEKDAYS } from '../lib/api'
 import { comptesApi, formatEuro } from '../lib/comptes'
 
@@ -92,9 +92,29 @@ export default function Home() {
           />
         </div>
       </Link>
+
+      <Link
+        to="/lysa"
+        className="rise group block rounded-2xl border border-pink-400/20 bg-gradient-to-br from-pink-400/10 via-zinc-900 to-zinc-900 p-6 transition duration-300 hover:border-pink-400/40 active:scale-[0.98]"
+        style={{ '--i': 3 } as React.CSSProperties}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-pink-400/15 text-pink-300">
+              <HeartStraight size={24} weight="fill" />
+            </span>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white">Lysa</h2>
+            <p className="mt-1 text-sm text-zinc-400">Ses séances à la maison</p>
+          </div>
+          <ArrowRight
+            size={22}
+            className="shrink-0 text-pink-300 transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </div>
+      </Link>
       </div>
 
-      <section className="rise mt-12" style={{ '--i': 3 } as React.CSSProperties}>
+      <section className="rise mt-12" style={{ '--i': 4 } as React.CSSProperties}>
         <p className="mb-2 font-mono text-[11px] font-medium tracking-[0.25em] text-zinc-600 uppercase">
           À venir
         </p>

@@ -23,6 +23,9 @@ const entrySchema = new Schema(
 
 const workoutSessionSchema = new Schema(
   {
+    // Deux personnes se partagent l'app : sans ça, Lysa verrait les séances
+    // de Lenny et réciproquement.
+    owner: { type: String, enum: ['lenny', 'lysa'], default: 'lenny', index: true },
     date: { type: Date, required: true },
     weekday: Number,
     title: String,

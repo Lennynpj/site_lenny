@@ -7,7 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "seed": "tsx seed/seed.ts",
-    "seed:comptes": "tsx seed/seed-comptes.ts"
+    "seed:comptes": "tsx seed/seed-comptes.ts",
+    "seed:lysa": "tsx seed/seed-lysa.ts"
   },
   "dependencies": {
     "@simplewebauthn/server": "^13.3.2",

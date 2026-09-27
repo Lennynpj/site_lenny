@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import { Program } from '../models/Program.js'
+import { owner } from '../lib/owner.js'
 
 const router = Router()
 
-router.get('/', async (_req, res) => {
-  const program = await Program.findOne()
+router.get('/', async (req, res) => {
+  const program = await Program.findOne({ owner: owner(req) })
   if (!program) {
     res.status(404).json({ error: 'Aucun programme. Lance le seed : npm run seed' })
     return
@@ -15,8 +16,8 @@ router.get('/', async (_req, res) => {
 router.put('/', async (req, res) => {
   const { name, days } = req.body
   const program = await Program.findOneAndUpdate(
-    {},
-    { name, days },
+    { owner: owner(req) },
+    { name, days, owner: owner(req) },
     { new: true, upsert: true, runValidators: true }
   )
   res.json(program)

@@ -285,12 +285,12 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/site_l
 await mongoose.connect(MONGODB_URI)
 console.log(`Connecté à ${MONGODB_URI}`)
 
-await Exercise.deleteMany({})
+await Exercise.deleteMany({ slug: { $not: /^lysa-/ } })
 await Exercise.insertMany(exercises)
 console.log(`${exercises.length} exercices insérés`)
 
-await Program.deleteMany({})
-await Program.create(program)
+await Program.deleteMany({ owner: 'lenny' })
+await Program.create({ ...program, owner: 'lenny' })
 console.log(`Programme « ${program.name} » inséré (${program.days.length} jours)`)
 
 // Cohérence : chaque slug du programme doit exister dans le catalogue

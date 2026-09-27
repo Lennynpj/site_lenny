@@ -2,6 +2,8 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import { Program } from './models/Program.js'
+import { WorkoutSession } from './models/WorkoutSession.js'
 import exercisesRouter from './routes/exercises.js'
 import programRouter from './routes/program.js'
 import sessionsRouter from './routes/sessions.js'
@@ -25,6 +27,20 @@ const PORT = Number(process.env.PORT) || 3001
 
 await mongoose.connect(MONGODB_URI)
 console.log(`MongoDB connecté : ${MONGODB_URI}`)
+
+/* L'app n'a longtemps connu qu'une personne : le programme et les séances
+   enregistrés avant l'arrivée de Lysa n'ont pas de propriétaire. On les
+   rattache à Lenny. Idempotent : les fois suivantes, 0 document modifié. */
+const sansProprietaire = { owner: { $exists: false } }
+const versLenny = { $set: { owner: 'lenny' as const } }
+const [programmes, seances] = await Promise.all([
+  Program.updateMany(sansProprietaire, versLenny),
+  WorkoutSession.updateMany(sansProprietaire, versLenny),
+])
+if (programmes.modifiedCount || seances.modifiedCount)
+  console.log(
+    `Rattaché à Lenny : ${programmes.modifiedCount} programme(s), ${seances.modifiedCount} séance(s)`
+  )
 
 app.listen(PORT, () => {
   console.log(`API démarrée : http://localhost:${PORT}/api/health`)

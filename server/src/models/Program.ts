@@ -32,6 +32,9 @@ const daySchema = new Schema(
 
 const programSchema = new Schema(
   {
+    // Deux personnes se partagent l'app : sans ça, Lysa verrait les séances
+    // de Lenny et réciproquement.
+    owner: { type: String, enum: ['lenny', 'lysa'], default: 'lenny', index: true },
     name: { type: String, required: true },
     days: { type: [daySchema], default: [] },
   },
