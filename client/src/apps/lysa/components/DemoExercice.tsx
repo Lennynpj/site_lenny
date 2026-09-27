@@ -4,9 +4,11 @@ import type { Exercise } from '../../../lib/types'
 import { Feuille } from './ui'
 
 /* Fiche « c'est quoi cet exercice ».
-   Uniquement de vraies personnes : la vidéo d'abord, parce que c'est la seule
-   chose qui montre le mouvement en entier ; les deux photos départ/arrivée
-   ensuite, alternées, pour retrouver la position d'un coup d'œil. */
+   Uniquement de vraies personnes. Les deux photos départ/arrivée d'abord,
+   alternées : la position se reconnaît d'un coup d'œil. La vidéo ensuite,
+   pour voir le mouvement en entier.
+   Toutes les vidéos retenues durent moins d'une minute et commencent sur la
+   démonstration : aucune introduction à passer, aucun minutage à deviner. */
 
 export default function DemoExercice({
   exercice,
@@ -30,6 +32,26 @@ export default function DemoExercice({
       titre={exercice.name}
     >
       <div className="space-y-5 pb-2">
+        {/* Les deux photos, alternées : ça fait un petit gif du geste */}
+        {photos.length >= 2 && (
+          <figure className="relative overflow-hidden rounded-bonbon bg-petale-2">
+            <img
+              src={photos[0]}
+              alt={`${exercice.name} — position de départ`}
+              className="h-60 w-full object-contain"
+            />
+            <img
+              src={photos[1]}
+              alt={`${exercice.name} — position d'arrivée`}
+              aria-hidden="true"
+              className="photo-alterne absolute inset-0 h-60 w-full object-contain"
+            />
+            <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-[rgba(61,36,48,0.75)] px-3 py-1.5 text-[13px] font-semibold text-white">
+              <ArrowsClockwise size={14} weight="bold" /> départ · arrivée
+            </span>
+          </figure>
+        )}
+
         {/* La vidéo. On ne charge l'iframe qu'au moment où elle appuie :
             sinon YouTube pose ses cookies et ralentit l'ouverture. */}
         {exercice.videoId &&
@@ -60,30 +82,10 @@ export default function DemoExercice({
                 </span>
               </span>
               <span className="absolute right-3 bottom-3 rounded-full bg-[rgba(61,36,48,0.8)] px-3 py-1.5 text-[13px] font-semibold text-white">
-                Voir la démonstration
+                La voir en vidéo
               </span>
             </button>
           ))}
-
-        {/* Les deux photos, alternées : ça fait un petit gif du geste */}
-        {photos.length >= 2 && (
-          <figure className="relative overflow-hidden rounded-bonbon bg-petale-2">
-            <img
-              src={photos[0]}
-              alt={`${exercice.name} — position de départ`}
-              className="h-60 w-full object-contain"
-            />
-            <img
-              src={photos[1]}
-              alt={`${exercice.name} — position d'arrivée`}
-              aria-hidden="true"
-              className="photo-alterne absolute inset-0 h-60 w-full object-contain"
-            />
-            <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-[rgba(61,36,48,0.75)] px-3 py-1.5 text-[13px] font-semibold text-white">
-              <ArrowsClockwise size={14} weight="bold" /> départ · arrivée
-            </span>
-          </figure>
-        )}
 
         {/* Le matériel ou le montage à la maison */}
         {exercice.setup && (

@@ -18,7 +18,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'squat',
     photos: p('goblet-squat'),
-    videoId: 'qdfyNNXX8l0',
+    videoId: '0sXGh-v7RZ0',
     howTo: [
       'Haltère tenu contre la poitrine, coudes serrés.',
       'Descends lentement, en comptant 3 secondes.',
@@ -49,7 +49,7 @@ const exercises = [
     pattern: 'fente',
     unit: 'parJambe',
     photos: p('fentes-arriere'),
-    videoId: 'c3t7gJi27Ww',
+    videoId: '5p8_wmN5qGI',
     howTo: [
       'Un haltère dans chaque main, bras le long du corps.',
       'Grand pas en arrière, genou arrière vers le sol sans le toucher.',
@@ -80,7 +80,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'tirage',
     photos: p('rowing-penche'),
-    videoId: 'XijBDKmdPlA',
+    videoId: 'qdoquGndifw',
     howTo: [
       'Buste penché en avant, dos plat — jamais arrondi.',
       'Tire les coudes vers l’arrière en serrant les omoplates.',
@@ -109,7 +109,7 @@ const exercises = [
     pattern: 'tirage',
     unit: 'parBras',
     photos: p('rowing-un-bras'),
-    videoId: 'VLzDhlGdpS0',
+    videoId: 'I6jgqLon-ng',
     setup: 'Un genou et une main en appui sur une chaise ou le canapé',
     howTo: [
       'Un genou et une main en appui sur le canapé.',
@@ -139,7 +139,7 @@ const exercises = [
     pattern: 'pompe',
     unit: 'max',
     photos: p('pompes'),
-    videoId: '50Yr6Mm78u0',
+    videoId: 'SWUw2epT8P4',
     howTo: [
       'Mains un peu plus larges que les épaules.',
       'Corps en planche : fesses serrées, pas de creux dans le dos.',
@@ -169,7 +169,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'hipthrust',
     photos: p('hip-thrust'),
-    videoId: 'MI3sJbT_F_Y',
+    videoId: 'MQ_pHfRk8xI',
     setup: 'Le canapé remplace le banc · haut du dos sur le bord, pieds à plat, écartés comme les hanches',
     howTo: [
       'Assise au sol, cale le haut du dos sur le bord du canapé.',
@@ -200,7 +200,7 @@ const exercises = [
     pattern: 'fente',
     unit: 'parJambe',
     photos: p('fentes-arriere'),
-    videoId: 'c3t7gJi27Ww',
+    videoId: '5p8_wmN5qGI',
     howTo: [
       'Comme au Jour 1, mais avec un pas bien plus grand.',
       'Plus le pas est long, plus ce sont les fessiers qui travaillent.',
@@ -248,7 +248,7 @@ const exercises = [
     pattern: 'gainage',
     unit: 'secondes',
     photos: p('gainage'),
-    videoId: 'mv42eVXvMDc',
+    videoId: 'hoPwUu8vvvw',
     howTo: [
       'En appui sur les avant-bras, corps bien droit.',
       'Fesses serrées, ventre rentré, aucun creux dans le dos.',
@@ -263,7 +263,7 @@ const exercises = [
     pattern: 'rotation',
     unit: 'parCote',
     photos: p('russian-twist'),
-    videoId: 'RdUUAlWz1Qk',
+    videoId: 'LSALdQZ_RMY',
     howTo: [
       'Assise, buste légèrement en arrière, pieds décollés si tu peux.',
       'Fais passer l’haltère d’un côté à l’autre.',
@@ -293,7 +293,7 @@ const exercises = [
     equipment: 'poids du corps',
     pattern: 'crunch',
     photos: p('crunch'),
-    videoId: 'CdDGyI9l0R0',
+    videoId: 'zUk1BiL6Ajc',
     howTo: [
       'Allongée, genoux pliés, mains sur les tempes.',
       'Décolle seulement les épaules, pas tout le dos.',
