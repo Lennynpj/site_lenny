@@ -49,6 +49,7 @@ const exercises = [
     pattern: 'fente',
     unit: 'parJambe',
     photos: p('fentes-arriere'),
+    videoId: 'c3t7gJi27Ww',
     howTo: [
       'Un haltère dans chaque main, bras le long du corps.',
       'Grand pas en arrière, genou arrière vers le sol sans le toucher.',
@@ -62,6 +63,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'squat',
     photos: p('squat-talons'),
+    videoId: 'uFPPbFNiifc',
     setup: 'Talons posés sur un livre épais ou une petite cale (2 à 4 cm)',
     howTo: [
       'Talons sur un livre épais : ça envoie le travail sur les cuisses.',
@@ -92,6 +94,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'pousse',
     photos: p('developpe-sol'),
+    videoId: 'n8L1mlr-Dik',
     howTo: [
       'Allongée au sol, genoux pliés, pieds à plat.',
       'Descends jusqu’à ce que les coudes touchent le sol.',
@@ -106,6 +109,7 @@ const exercises = [
     pattern: 'tirage',
     unit: 'parBras',
     photos: p('rowing-un-bras'),
+    videoId: 'VLzDhlGdpS0',
     setup: 'Un genou et une main en appui sur une chaise ou le canapé',
     howTo: [
       'Un genou et une main en appui sur le canapé.',
@@ -120,6 +124,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'epaules',
     photos: p('developpe-militaire'),
+    videoId: '0VRD2xGvTrE',
     howTo: [
       'Debout ou assise, ventre gainé, fesses serrées.',
       'Pousse au-dessus de la tête sans cambrer le bas du dos.',
@@ -134,6 +139,7 @@ const exercises = [
     pattern: 'pompe',
     unit: 'max',
     photos: p('pompes'),
+    videoId: '50Yr6Mm78u0',
     howTo: [
       'Mains un peu plus larges que les épaules.',
       'Corps en planche : fesses serrées, pas de creux dans le dos.',
@@ -179,6 +185,7 @@ const exercises = [
     pattern: 'charniere',
     unit: 'parJambe',
     photos: p('rdl-une-jambe'),
+    videoId: 'A6MYR61mLTo',
     howTo: [
       'En appui sur une jambe, l’autre part droite derrière toi.',
       'Descends l’haltère le long de la jambe d’appui.',
@@ -193,6 +200,7 @@ const exercises = [
     pattern: 'fente',
     unit: 'parJambe',
     photos: p('fentes-arriere'),
+    videoId: 'c3t7gJi27Ww',
     howTo: [
       'Comme au Jour 1, mais avec un pas bien plus grand.',
       'Plus le pas est long, plus ce sont les fessiers qui travaillent.',
@@ -206,6 +214,7 @@ const exercises = [
     equipment: 'haltères',
     pattern: 'squat',
     photos: p('squat-sumo'),
+    videoId: 'v8CD8ZGVlGA',
     howTo: [
       'Pieds bien plus larges que les épaules, pointes ouvertes.',
       'Un haltère tenu à deux mains entre les jambes.',
@@ -239,6 +248,7 @@ const exercises = [
     pattern: 'gainage',
     unit: 'secondes',
     photos: p('gainage'),
+    videoId: 'mv42eVXvMDc',
     howTo: [
       'En appui sur les avant-bras, corps bien droit.',
       'Fesses serrées, ventre rentré, aucun creux dans le dos.',
@@ -253,6 +263,7 @@ const exercises = [
     pattern: 'rotation',
     unit: 'parCote',
     photos: p('russian-twist'),
+    videoId: 'RdUUAlWz1Qk',
     howTo: [
       'Assise, buste légèrement en arrière, pieds décollés si tu peux.',
       'Fais passer l’haltère d’un côté à l’autre.',
@@ -266,7 +277,9 @@ const exercises = [
     equipment: 'poids du corps',
     pattern: 'climbers',
     unit: 'parCote',
-    photos: p('mountain-climbers'),
+    // Photo écartée : prise de trois quarts, on ne lit pas le mouvement.
+    photos: [],
+    videoId: 'gXv9T1flQhU',
     howTo: [
       'En position de pompe, mains bien sous les épaules.',
       'Ramène un genou vers la poitrine, puis l’autre.',
@@ -280,6 +293,7 @@ const exercises = [
     equipment: 'poids du corps',
     pattern: 'crunch',
     photos: p('crunch'),
+    videoId: 'CdDGyI9l0R0',
     howTo: [
       'Allongée, genoux pliés, mains sur les tempes.',
       'Décolle seulement les épaules, pas tout le dos.',

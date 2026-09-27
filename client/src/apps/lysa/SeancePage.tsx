@@ -16,7 +16,7 @@ import type { Exercise, ProgramItem, SetEntry, WorkoutSession } from '../../lib/
 import { BoutonDoux, BoutonRose, MessageErreur, Squelette } from './components/ui'
 import Compteur from './components/Compteur'
 import DemoExercice from './components/DemoExercice'
-import Picto from './components/Picto'
+import Vignette from './components/Vignette'
 
 /* La séance, un exercice à la fois.
    Le côté de Lenny empile toute la séance dans une longue page : on scrolle
@@ -307,9 +307,9 @@ export default function SeancePage() {
           <button
             onClick={() => exo && setDemo(exo)}
             aria-label={`Montre-moi : ${exo?.name}`}
-            className="grid h-[88px] w-[88px] shrink-0 place-items-center rounded-[22px] bg-petale-2 transition-transform duration-100 active:scale-95"
+            className="h-[88px] w-[88px] shrink-0 overflow-hidden rounded-[22px] bg-petale-2 transition-transform duration-100 active:scale-95"
           >
-            <Picto pattern={exo?.pattern} className="h-[76px] w-[76px]" anime />
+            {exo && <Vignette exercice={exo} className="h-full w-full rounded-[22px]" />}
           </button>
           <div className="min-w-0 flex-1">
             {ligne.circuit && (

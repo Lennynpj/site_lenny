@@ -5,7 +5,7 @@ import { apiLysa, WEEKDAYS } from '../../lib/api'
 import type { Exercise, Program } from '../../lib/types'
 import { BoutonRose, MessageErreur, Squelette, TitreSection } from './components/ui'
 import DemoExercice from './components/DemoExercice'
-import Picto from './components/Picto'
+import Vignette from './components/Vignette'
 
 const ORDRE = [1, 2, 3, 4, 5, 6, 0]
 
@@ -82,8 +82,8 @@ export default function ProgrammePage() {
                         onClick={() => exo && setDemo(exo)}
                         className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors duration-100 active:bg-petale-2"
                       >
-                        <span className="grid h-14 w-14 shrink-0 place-items-center rounded-[18px] bg-petale-2">
-                          <Picto pattern={exo?.pattern} className="h-11 w-11" />
+                        <span className="h-14 w-14 shrink-0 overflow-hidden rounded-[18px] bg-petale-2">
+                          {exo && <Vignette exercice={exo} className="h-full w-full" />}
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="block truncate text-[17px] font-semibold text-encre-lysa">
