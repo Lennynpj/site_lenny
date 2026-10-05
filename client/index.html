@@ -30,6 +30,10 @@
           var el = d.querySelector(sel)
           if (el) el.setAttribute(attr, val)
         }
+        if (location.pathname.indexOf('/portfolio') === 0) {
+          set('meta[name="theme-color"]', 'content', '#0b1220')
+          d.title = 'Lenny Napieraj — Portfolio'
+        }
         if (estComptes) {
           d.documentElement.classList.add('theme-clair')
           set('meta[name="theme-color"]', 'content', '#ffffff')

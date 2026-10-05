@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
+import Portfolio from './pages/Portfolio'
 import MuscuLayout from './apps/muscu/MuscuLayout'
 import TodayPage from './apps/muscu/TodayPage'
 import ProgramPage from './apps/muscu/ProgramPage'
@@ -20,6 +21,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/portfolio" element={<Portfolio />} />
       <Route path="/muscu" element={<MuscuLayout />}>
         <Route index element={<TodayPage />} />
         <Route path="programme" element={<ProgramPage />} />
