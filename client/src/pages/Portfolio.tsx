@@ -13,7 +13,9 @@ import type { Legende } from './portfolio/Chapitre'
    Les légendes sont définies ici, hors des composants : un tableau recréé à
    chaque rendu relancerait les écouteurs de défilement. */
 
-const M = (n: string) => `/portfolio/${n}`
+// Les médias vivent dans /film/ et non /portfolio/ : un dossier du même nom
+// que la route ferait rediriger la page vers le dossier (301 de nginx).
+const M = (n: string) => `/film/${n}`
 
 const CHAPITRES: { id: string; fichier: string; alt: string; ecrans: number; legendes: Legende[] }[] = [
   {
